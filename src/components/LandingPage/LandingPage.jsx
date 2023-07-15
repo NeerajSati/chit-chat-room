@@ -1,6 +1,7 @@
 import React from 'react'
 import HeroImage from './../../assets/HeroImage.webp'
 import { FaTeamspeak } from 'react-icons/fa';
+import Typewriter from 'typewriter-effect';
 import 'animate.css';
 
 function LandingPage() {
@@ -13,6 +14,18 @@ function LandingPage() {
           <button className='ml-5 bg-gray-800 p-2 pl-5 pr-5 rounded-[20px] cursor-pointer tracking-[1px] max-sm:pl-3 max-sm:pr-3 max-sm:ml-3'>Register</button>
         </div>
       </div>
+      <div className='text-white w-100 h-100 mt-[3rem] flex items-center justify-center flex-col text-[30px] font-[Manrope] max-sm:text-[16px]'>
+        Chat and Connect with People
+        <Typewriter
+          options={{
+            strings: ['Anytime','Anywhere','On one click'],
+            autoStart: true,
+            loop: true,
+            delay:50,
+          }}
+        />
+      </div>
+      <button className='absolute left-[50%] bottom-[10%] translate-x-[-50%] text-white text-[16px] rounded-[20px] bg-[#ffffff26] p-2 pl-5 pr-5 tracking-[1px] max-sm:pl-3 max-sm:pr-3 max-sm:text-[14px]'>Continue as a Guest</button>
     </div>
   )
 }
