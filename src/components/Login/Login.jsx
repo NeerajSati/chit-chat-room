@@ -1,10 +1,13 @@
 import React,{useState} from 'react'
 import Background from '../../assets/Login.jpg'
 import {RxCross2} from 'react-icons/rx'
+import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
 import { Link } from 'react-router-dom';
 
 function Login({perform}) {
     const [page, setPage] = useState(perform);
+    const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="w-100 h-[100vh] flex items-center justify-center text-[16px] bg-red-500 text-[#d7d7d7] font-[Manrope] font-bold  max-sm:text-[14px] overflow-hidden" style={{ backgroundImage: `url(${Background})`, backgroundPosition: 'center', backgroundSize: 'cover'}}>
         {
@@ -16,9 +19,12 @@ function Login({perform}) {
                 <div className='text-[14px]'>Email</div>
                 <input className='rounded-sm mt-2 py-3 px-5 bg-[#1c1c1c] text-[gray] w-[450px] max-sm:w-full'/>
             </div>
-            <div className='mt-5 flex flex-col items-start justify-start max-sm:w-full'>
+            <div className='mt-5 flex flex-col items-start justify-start relative max-sm:w-full'>
                 <div className='text-[14px]'>Password</div>
-                <input className='rounded-sm mt-2 py-3 px-5 bg-[#1c1c1c] text-[gray] w-[450px] max-sm:w-full'/>
+                <input type={showPassword ? "text" : "password"} className='rounded-sm mt-2 py-3 pr-10 px-5 bg-[#1c1c1c] text-[gray] w-[450px] tracking-wider max-sm:w-full'/>
+                <div onClick={()=>setShowPassword(visible => !visible)} className='absolute bottom-[14px] right-3 cursor-pointer text-[20px]'>
+                {showPassword ? <AiFillEye/> : <AiFillEyeInvisible/>}
+                </div>
             </div>
             <button className='w-full rounded-sm mt-5 py-2 px-2 bg-[#0FD345] text-black'>Log In</button>
             <button className='w-full rounded-sm mt-3 py-2 px-2 bg-[#006FA2]'>Continue as Guest</button>
@@ -35,9 +41,12 @@ function Login({perform}) {
                 <div className='text-[14px]'>Username</div>
                 <input className='rounded-sm mt-2 py-3 px-5 bg-[#1c1c1c] text-[gray] w-[450px] max-sm:w-full'/>
             </div>
-            <div className='mt-5 flex flex-col items-start justify-start max-sm:w-full'>
+            <div className='mt-5 flex flex-col items-start justify-start relative max-sm:w-full'>
                 <div className='text-[14px]'>Password</div>
-                <input className='rounded-sm mt-2 py-3 px-5 bg-[#1c1c1c] text-[gray] w-[450px] max-sm:w-full'/>
+                <input type={showPassword ? "text" : "password"} className='rounded-sm mt-2 py-3 pr-10 px-5 bg-[#1c1c1c] text-[gray] w-[450px] tracking-wider max-sm:w-full'/>
+                <div onClick={()=>setShowPassword(visible => !visible)} className='absolute bottom-[14px] right-3 cursor-pointer text-[20px]'>
+                {showPassword ? <AiFillEye/> : <AiFillEyeInvisible/>}
+                </div>
             </div>
             <button className='w-full rounded-sm mt-5 py-2 px-2 bg-[#006FA2]'>Continue</button>
             <div onClick={()=>setPage('Login')} className='cursor-pointer mt-5 text-[#13A67D]'>Already have an account?</div>
