@@ -2,9 +2,6 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const dotenv = require("dotenv");
-const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/user");
-const groupRoutes = require("./routes/group");
 const mongoose = require('mongoose');
 dotenv.config();
 app.use(cors())
@@ -18,6 +15,10 @@ mongoose.connect(process.env.MONGODB_URL)
 app.listen(port, () => {
   console.log(`App is listening on port ${port}`)
 })
+
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/user");
+const groupRoutes = require("./routes/group");
 
 app.use('/api/auth', authRoutes)
 app.use('/api/groups', groupRoutes)
