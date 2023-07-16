@@ -1,5 +1,6 @@
 import React,{useState} from 'react'
 import Background from '../../assets/Login.jpg'
+import {GrFormPreviousLink} from 'react-icons/gr'
 
 function Login() {
     const [page, setPage] = useState('Login');
@@ -40,6 +41,7 @@ function Login() {
             <div onClick={()=>setPage('Login')} className='cursor-pointer mt-5 text-[#13A67D]'>Already have an account?</div>
         </div>
         }
+        <div className='cursor-pointer absolute left-[10%] top-[10%] bg-[white] p-3 rounded-full text-[30px]'><GrFormPreviousLink/></div>
     </div>
   )
 }
