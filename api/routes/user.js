@@ -1,5 +1,7 @@
 const router = require("express").Router();
-router.get('/',async(req,res)=>{
-    res.status(200).json({success:true})
-})
+const {updateUser} = require("../controllers/user")
+const {jwtAuthenticationMiddleware} = require("../utils/jwtVerify");
+
+router.get('/update', jwtAuthenticationMiddleware, updateUser)
+
 module.exports = router

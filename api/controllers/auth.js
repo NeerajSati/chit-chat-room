@@ -3,12 +3,19 @@ const {constants} = require("./../utils/constants")
 const User = require("../models/UserSchema");
 const jwtVerify = require("../utils/jwtVerify");
 const bcrypt = require('bcrypt');
+const {uploadImage} = require("../utils/AzureUpload")
 const salt = bcrypt.genSaltSync(10);
 
 const registerUserValidate = async(req,res,next)=>{
-    let {username, email, password} = req.body;
+    let {username, email, password} = req.fields;
     if(!username){
         return res.status(400).json({success: false, msg: "Username is Required!"})
+    }
+    if(!(/^[A-Za-z0-9]*$/.test(username))){
+        return res.status(400).json({success: false, msg: "Username should not contain special characters!"})
+    }
+    if(username.length > 15 || username.length < 3){
+        return res.status(400).json({success: false, msg: "Username can only have 3-15 characters!"})
     }
     if(!email){
         return res.status(400).json({success: false, msg: "Email is Required!"})
@@ -16,14 +23,26 @@ const registerUserValidate = async(req,res,next)=>{
     if(!password || password.length < 8){
         return res.status(400).json({success: false, msg: "Password should have atleast 8 characters!"})
     }
+
+    const userData = await User.find().or([{email}, {username}]);
+
+    if(userData && userData.filter((x)=>x.email===email).length){
+        return res.status(400).json({success: false, msg: "Email already exists!"})
+    }
+    if(userData && userData.filter((x)=>x.username===username).length){
+        return res.status(400).json({success: false, msg: "Username already exists!"})
+    }
     next()
 }
 
 const registerUser = async(req,res)=>{
     try{
-        let {username, email, password} = req.body;
-        let profilePic = req.file && req.file.url ? req.file.url : null;
-        if(!profilePic){
+        let {username, email, password} = req.fields;
+        const { photo } = req.files;
+        let profilePic = "";
+        if(photo){
+            profilePic = await uploadImage(username,photo)
+        } else{
             profilePic = constants.templateProfilePic[Math.floor(Math.random() * constants.templateProfilePic.length)];
         }
         const hashedPassword = bcrypt.hashSync(password, salt);

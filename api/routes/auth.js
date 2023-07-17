@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const {registerUser, registerUserValidate, loginUserValidate, loginUser} = require("../controllers/auth")
-const {multerSaveImage} = require("../utils/multer")
+const formidableMiddleware = require('express-formidable');
 
 router.get('/login', loginUserValidate, loginUser)
-router.get('/register', multerSaveImage, registerUserValidate, registerUser)
+router.get('/register', formidableMiddleware(), registerUserValidate, registerUser)
+// router.get('/register', multerImageMiddleware, registerUserValidate, registerUser)
 
 module.exports = router
