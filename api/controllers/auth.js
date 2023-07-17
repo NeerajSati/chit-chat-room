@@ -1,4 +1,3 @@
-const router = require("express").Router();
 const {constants} = require("./../utils/constants")
 const User = require("../models/UserSchema");
 const jwtVerify = require("../utils/jwtVerify");
