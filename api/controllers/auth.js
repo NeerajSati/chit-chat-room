@@ -40,7 +40,7 @@ const registerUser = async(req,res)=>{
         const { photo } = req.files;
         let profilePic = "";
         if(photo){
-            profilePic = await uploadImage(username,photo)
+            profilePic = await uploadImage("personal-profile-"+username,photo)
         } else{
             profilePic = constants.templateProfilePic[Math.floor(Math.random() * constants.templateProfilePic.length)];
         }

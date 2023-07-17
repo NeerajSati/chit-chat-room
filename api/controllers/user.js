@@ -42,7 +42,7 @@ const searchUser = async(req,res)=>{
             },
           });
 
-        const data = usersList.map((obj)=>{return {username: obj.username,profilePic: obj.profilePic}})
+        const data = usersList.map((obj)=>{return {_id: obj._id, username: obj.username,profilePic: obj.profilePic}})
 
         return res.status(200).json({success:true, msg:"Users fetched successfully!", data:data})
     } catch(err){

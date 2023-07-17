@@ -4,18 +4,20 @@ const { Schema } = mongoose;
 const groupMemberSchema = new Schema({
     groupId:{
         type:mongoose.ObjectId,
-        required:true
+        required:true,
+        ref: "groups"
     },
     userId:{
         type:mongoose.ObjectId,
-        required:true
+        required:true,
+        ref: "users"
     },
     lastSeen:{
         type:Date,
         required:true
     },
     isAdmin:{
-        type:String,
+        type:Boolean,
         required:true,
     }
 },{timestamps:true});
