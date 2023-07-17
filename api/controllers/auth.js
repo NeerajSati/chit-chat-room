@@ -2,11 +2,8 @@ const router = require("express").Router();
 const {constants} = require("./../utils/constants")
 const User = require("../models/UserSchema");
 const jwtVerify = require("../utils/jwtVerify");
-const {multerUpload} = require("../utils/multer")
 const bcrypt = require('bcrypt');
 const salt = bcrypt.genSaltSync(10);
-
-const multerSaveImage = multerUpload.single('profilePic')
 
 const registerUserValidate = async(req,res,next)=>{
     let {username, email, password} = req.body;
@@ -88,6 +85,5 @@ module.exports = {
     registerUser,
     registerUserValidate,
     loginUserValidate,
-    loginUser,
-    multerSaveImage
+    loginUser
 }

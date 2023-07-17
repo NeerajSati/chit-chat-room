@@ -21,4 +21,6 @@ const multerUpload = multer({
     storage: azureStorage
 });
 
-module.exports = {multerUpload}
+const multerSaveImage = multerUpload.single('photo')
+
+module.exports = {multerSaveImage}
