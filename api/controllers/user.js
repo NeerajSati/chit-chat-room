@@ -28,6 +28,30 @@ const updateUser = async(req,res)=>{
     }
 }
 
+const searchUser = async(req,res)=>{
+    try{
+        const searchName = req.body.searchName;
+        if(!searchName){
+            return res.status(400).json({success: false, msg: "Please provide a search query!"})
+        }
+
+        const usersList = await User.find({
+            username: {
+              $regex: `${searchName}`,
+              $options: "i",
+            },
+          });
+
+        const data = usersList.map((obj)=>{return {username: obj.username,profilePic: obj.profilePic}})
+
+        return res.status(200).json({success:true, msg:"Users fetched successfully!", data:data})
+    } catch(err){
+        console.log("updateUser Error", err)
+        return res.status(400).json({success: false, msg: constants.genericError, error: err})
+    }
+}
+
 module.exports = {
-    updateUser
+    updateUser,
+    searchUser
 }
