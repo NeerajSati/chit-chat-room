@@ -136,7 +136,7 @@ const getGroupDetails = async(req,res)=>{
         
         return res.status(200).json({success:true, msg:"Groups Fetched successfully!", data: groupDetails})
     } catch(err){
-        console.log("joinedGroups Error", err)
+        console.log("getGroupDetails Error", err)
         return res.status(400).json({success: false, msg: constants.genericError, error: err})
     }
 }
@@ -168,10 +168,27 @@ const getGroupMembers = async(req,res)=>{
             }
         })
         groupMembersList = [...adminMembers, ...nonAdminMembers];
-        
+
         return res.status(200).json({success:true, msg:"Groups Fetched successfully!", data: groupMembersList, userData: currentUserData})
     } catch(err){
-        console.log("joinedGroups Error", err)
+        console.log("getGroupMembers Error", err)
+        return res.status(400).json({success: false, msg: constants.genericError, error: err})
+    }
+}
+
+const updateGroupDetails = async(req,res)=>{
+    try{
+        const groupId = req.params.id;
+        const {groupName, groupDescription, profilePicOldUrl} = req.fields;
+        const {groupProfilePic} = req.files;
+        let groupProfilePicUrl = profilePicOldUrl;
+        if(groupProfilePic){
+            groupProfilePicUrl = await uploadImage("group-profile-"+uuidv4(), groupProfilePic);
+        }
+        await Group.findByIdAndUpdate(groupId, { groupName, groupDescription, groupProfilePic: groupProfilePicUrl });
+        return res.status(200).json({success:true, msg:"Group Updated successfully!"})
+    } catch(err){
+        console.log("updateGroupDetails Error", err)
         return res.status(400).json({success: false, msg: constants.genericError, error: err})
     }
 }
@@ -181,5 +198,6 @@ module.exports = {
     createGroup,
     joinedGroups,
     getGroupDetails,
-    getGroupMembers
+    getGroupMembers,
+    updateGroupDetails
 }
