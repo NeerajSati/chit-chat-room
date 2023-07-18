@@ -1,14 +1,15 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const Group = require("../models/GroupSchema");
 
 const groupMemberSchema = new Schema({
     groupId:{
-        type:mongoose.ObjectId,
+        type:Schema.Types.ObjectId,
         required:true,
-        ref: "groups"
+        ref: Group
     },
     userId:{
-        type:mongoose.ObjectId,
+        type:Schema.Types.ObjectId,
         required:true,
         ref: "users"
     },
