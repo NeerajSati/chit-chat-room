@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGODB_URL)
 .then(console.log("Connected to Database"))
 .catch(err=>console.log(err));
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App is listening on port ${port}`)
 })
 
@@ -20,8 +20,11 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const groupRoutes = require("./routes/group");
 const messageRoutes = require("./routes/message");
+const {socketHelper} = require("./socket")
 
 app.use('/api/auth', authRoutes)
 app.use('/api/groups', groupRoutes)
 app.use('/api/user', userRoutes)
 app.use('/api/messages', messageRoutes)
+
+socketHelper(server);

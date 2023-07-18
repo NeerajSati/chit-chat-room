@@ -48,12 +48,43 @@ const getAllMessages = async(req,res)=>{
         
         return res.status(200).json({success:true, msg:"Messages Fetched successfully!", data: {messageList, newMessagesIdx}})
     } catch(err){
-        console.log("joinedGroups Error", err)
+        console.log("getAllMessages Error", err)
         return res.status(400).json({success: false, msg: constants.genericError, error: err})
+    }
+}
+
+const sendMessageViaSocket = async(userId, groupId, message)=>{
+    try{
+        const getUserGroupMemberData = await GroupMember.findOneAndUpdate({userId, groupId},{lastSeen: new Date()});
+        if(!getUserGroupMemberData){
+            return;
+        };
+
+        const createMessage = new Message({
+            senderId: userId,
+            groupId,
+            message
+        })
+        const savedMessage = await createMessage.save();
+        return savedMessage
+    } catch(err){
+        console.log("sendMessageViaSocket Error", err)
+        return;
+    }
+}
+
+const updateGroupLastSeen = async(userId, groupId)=>{
+    try{
+        await GroupMember.findOneAndUpdate({userId, groupId},{lastSeen: new Date()});
+    } catch(err){
+        console.log("updateGroupLastSeen Error", err)
+        return;
     }
 }
 
 module.exports = {
     isUserMemberOfGroup,
-    getAllMessages
+    getAllMessages,
+    sendMessageViaSocket,
+    updateGroupLastSeen
 }
