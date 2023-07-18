@@ -129,8 +129,57 @@ const joinedGroups = async(req,res)=>{
     }
 }
 
+const getGroupDetails = async(req,res)=>{
+    try{
+        const groupId = req.params.id;
+        const groupDetails = await Group.findById(groupId, 'groupName groupDescription groupProfilePic');
+        
+        return res.status(200).json({success:true, msg:"Groups Fetched successfully!", data: groupDetails})
+    } catch(err){
+        console.log("joinedGroups Error", err)
+        return res.status(400).json({success: false, msg: constants.genericError, error: err})
+    }
+}
+
+const getGroupMembers = async(req,res)=>{
+    try{
+        const userId = req.userId;
+        const groupId = req.params.id;
+        let groupMembersList = await GroupMember.find({groupId}, 'userId lastSeen isAdmin').populate("userId");
+        groupMembersList = groupMembersList.map((member)=>{
+            return {
+                userId: member.userId._id,
+                profilePic: member.userId.profilePic, 
+                username: member.userId.username,
+                lastSeen: member.lastSeen,
+                isAdmin: member.isAdmin,
+            }
+        })
+        let currentUserData = null
+        let adminMembers = [];
+        let nonAdminMembers = [];
+        groupMembersList.forEach((member)=>{
+            if(member.userId.equals(userId)){
+                currentUserData = member;
+            } else if(member.isAdmin){
+                adminMembers.push(member)
+            } else{
+                nonAdminMembers.push(member)
+            }
+        })
+        groupMembersList = [...adminMembers, ...nonAdminMembers];
+        
+        return res.status(200).json({success:true, msg:"Groups Fetched successfully!", data: groupMembersList, userData: currentUserData})
+    } catch(err){
+        console.log("joinedGroups Error", err)
+        return res.status(400).json({success: false, msg: constants.genericError, error: err})
+    }
+}
+
 module.exports = {
     createGroupValidate,
     createGroup,
-    joinedGroups
+    joinedGroups,
+    getGroupDetails,
+    getGroupMembers
 }

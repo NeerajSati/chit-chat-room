@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const Group = require("../models/GroupSchema");
+const User = require("../models/UserSchema");
 
 const groupMemberSchema = new Schema({
     groupId:{
@@ -11,7 +12,7 @@ const groupMemberSchema = new Schema({
     userId:{
         type:Schema.Types.ObjectId,
         required:true,
-        ref: "users"
+        ref: User
     },
     lastSeen:{
         type:Date,
