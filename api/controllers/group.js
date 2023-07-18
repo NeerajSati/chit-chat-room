@@ -200,11 +200,37 @@ const updateGroupDetails = async(req,res)=>{
     }
 }
 
+const updateGroupAdmins = async(req,res)=>{
+    try{
+        const userId = req.userId;
+        const groupId = req.params.id;
+        const {removeFromAdmin, makeAdmin} = req.body;
+        // check if user is admin
+        const getUserGroupMemberData = await GroupMember.findOne({userId, groupId}, 'isAdmin');
+        if(!getUserGroupMemberData || !getUserGroupMemberData.isAdmin){
+            return res.status(201).json({success: false, msg: "You cannot update this group!"})
+        }
+
+        if(removeFromAdmin){
+            await GroupMember.findOneAndUpdate({userId: removeFromAdmin, groupId, isAdmin:true}, {isAdmin: false});
+        }
+        if(makeAdmin){
+            await GroupMember.findOneAndUpdate({userId: makeAdmin, groupId, isAdmin:false}, {isAdmin: true});
+        }
+        
+        return res.status(200).json({success:true, msg:"Group Admins Updated successfully!"})
+    } catch(err){
+        console.log("updateGroupAdmins Error", err)
+        return res.status(400).json({success: false, msg: constants.genericError, error: err})
+    }
+}
+
 module.exports = {
     createGroupValidate,
     createGroup,
     joinedGroups,
     getGroupDetails,
     getGroupMembers,
-    updateGroupDetails
+    updateGroupDetails,
+    updateGroupAdmins
 }
