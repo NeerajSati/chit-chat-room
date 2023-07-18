@@ -30,7 +30,7 @@ const updateUser = async(req,res)=>{
 
 const searchUser = async(req,res)=>{
     try{
-        const searchName = req.body.searchName;
+        const searchName = req.query.searchName;
         if(!searchName){
             return res.status(400).json({success: false, msg: "Please provide a search query!"})
         }
