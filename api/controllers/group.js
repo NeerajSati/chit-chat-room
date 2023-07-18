@@ -183,7 +183,7 @@ const updateGroupDetails = async(req,res)=>{
         // check if user is admin
         const getUserGroupMemberData = await GroupMember.findOne({userId, groupId}, 'isAdmin');
         if(!getUserGroupMemberData || !getUserGroupMemberData.isAdmin){
-            return res.status(201).json({success: false, msg: "You cannot update this group!"})
+            return res.status(200).json({success: false, msg: "You cannot update this group!"})
         }
 
         const {groupName, groupDescription, profilePicOldUrl} = req.fields;
@@ -208,7 +208,7 @@ const updateGroupAdmins = async(req,res)=>{
         // check if user is admin
         const getUserGroupMemberData = await GroupMember.findOne({userId, groupId}, 'isAdmin');
         if(!getUserGroupMemberData || !getUserGroupMemberData.isAdmin){
-            return res.status(201).json({success: false, msg: "You cannot update this group!"})
+            return res.status(200).json({success: false, msg: "You cannot update this group!"})
         }
 
         if(removeFromAdmin){

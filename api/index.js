@@ -19,7 +19,9 @@ app.listen(port, () => {
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
 const groupRoutes = require("./routes/group");
+const messageRoutes = require("./routes/message");
 
 app.use('/api/auth', authRoutes)
 app.use('/api/groups', groupRoutes)
 app.use('/api/user', userRoutes)
+app.use('/api/messages', messageRoutes)
