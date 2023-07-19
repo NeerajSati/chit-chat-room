@@ -15,8 +15,8 @@ const socketHelper = async(server) => {
         console.log(socket.user.username,"Just Connected!");
 
         socket.on('send_message', async (data) => {
-            const {groupId, message} = data;
-            if(!groupId || !message){
+            const {groupId, message, tempMessageId} = data;
+            if(!groupId || !message || !tempMessageId){
                 return;
             }
             const messageSentData = await sendMessageViaSocket(socket.user._id, groupId, message);
@@ -28,7 +28,12 @@ const socketHelper = async(server) => {
                     senderUserName: socket.user.username,
                     senderProfilePic: socket.user.profilePic
                 }
-                
+
+                socket.emit("message_sent", {
+                    groupId: messageSentData.groupId,
+                    message: receivedMessage,
+                    tempMessageId
+                });
                 socket.broadcast.emit("message_received", {
                     groupId: messageSentData.groupId,
                     message: receivedMessage
