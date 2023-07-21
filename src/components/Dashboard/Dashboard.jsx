@@ -8,6 +8,7 @@ import Chatlist from '../Chatlist/Chatlist';
 import NoChatImage from './../../assets/EmptyScreen.jpg'
 
 function Dashboard() {
+  const [chatList, setChatList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -18,9 +19,13 @@ function Dashboard() {
       }
   }, []);
 
+  useEffect(() => {
+    setChatList((chatList.filter((e)=>e.groupName.includes(searchTerm))))
+}, [searchTerm]);
+
   return (
     <div className='flex flex-row w-full h-screen'>
-      <div className='flex-[3.5] bg-[#2B2D31] w-full flex flex-col'>
+      <div className='flex-[3.5] bg-[#2B2D31] w-full flex flex-col overflow-y-scroll'>
         <div className='h-[70px] bg-[#111213] flex items-center justify-between'>
           <div className='w-[50px] h-[50px] ml-2 relative cursor-pointer max-md:w-[40px] max-md:h-[40px]'>
             <img alt="profileImage" className='w-full h-full rounded-full' src="https://images.pexels.com/photos/17102422/pexels-photo-17102422/free-photo-of-wood-landscape-water-summer.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"></img>  
@@ -43,7 +48,7 @@ function Dashboard() {
             <input placeholder='Search my chats' value={searchTerm} onChange={(e)=>{setSearchTerm(e.target.value)}} className='bg-[#18191b] outline-none w-full ml-4' onFoc/>
           </div>
         </div>
-        <Chatlist/>
+        <Chatlist chatList={chatList}/>
       </div>
       <div className='flex-[6.5] bg-[#323338] w-full'>
         <div className='w-full h-full flex items-center justify-center flex-col text-slate-400 font-bold select-none'>
