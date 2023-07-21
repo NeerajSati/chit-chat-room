@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 export const loginUser = createAsyncThunk(
   "auth/login",
   async (payload, thunkAPI) => {
-      const {email,password} = payload
+      const {email,password} = payload;
       try {
         const userAuth = await axios.post(loginAPI(), {
           email,
@@ -14,8 +14,8 @@ export const loginUser = createAsyncThunk(
         });
         return userAuth.data;
       } catch (err) {
-        if(err.response.data.msg){
-          toast.error(err.response.data.msg);
+        if(err?.response?.data?.msg){
+          toast.error(err?.response?.data?.msg);
         } else{
           toast.error("Something went wrong");
         }
@@ -38,8 +38,8 @@ export const registerUser = createAsyncThunk(
         toast.success("Successfully Registered! Logging you in...")
         return userAuth.data;
       } catch (err) {
-        if(err.response.data.msg){
-          toast.error(err.response.data.msg);
+        if(err?.response?.data?.msg){
+          toast.error(err?.response?.data?.msg);
         } else{
           toast.error("Something went wrong");
         }
@@ -65,6 +65,7 @@ export const authSlice = createSlice({
     })
     .addCase(loginUser.fulfilled, (state, action) => {
       state.authToken = action.payload.token;
+      localStorage.setItem('authToken', JSON.stringify(action.payload.token));
     })
     .addCase(loginUser.rejected, (state, action) => {
       throw action.error;
@@ -73,6 +74,7 @@ export const authSlice = createSlice({
     })
     .addCase(registerUser.fulfilled, (state, action) => {
       state.authToken = action.payload.token;
+      localStorage.setItem('authToken', JSON.stringify(action.payload.token));
     })
     .addCase(registerUser.rejected, (state, action) => {
       throw action.error;

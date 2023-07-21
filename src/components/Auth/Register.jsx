@@ -80,7 +80,6 @@ function Register({switchPage}) {
             </div>
             <button disabled={disableAuthActions} onClick={registerUserInit} className='w-full rounded-sm mt-5 py-2 px-2 bg-[#006FA2] disabled:opacity-50 disabled:cursor-not-allowed'>Continue</button>
             <div onClick={()=>switchPage('Login')} className='cursor-pointer mt-5 text-[#13A67D]'>Already have an account?</div>
-            <Link to="/" className='cursor-pointer absolute right-[2rem] top-[1.5rem] bg-[#ff000040] p-3 rounded-full text-[22px] max-sm:text-[16px] max-sm:right-[1rem]'><RxCross2/></Link>
         </div>
   )
 }

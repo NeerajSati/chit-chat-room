@@ -1,11 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import HeroImage from './../../assets/HeroImage.webp'
 import { FaTeamspeak } from 'react-icons/fa';
 import Typewriter from 'typewriter-effect';
 import 'animate.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function LandingPage() {
+  const navigate = useNavigate();;
+
+  useEffect(() => {
+      const authToken = JSON.parse(localStorage.getItem('authToken'));
+      if(authToken){
+          navigate('/chat')
+      }
+  }, []);
+
   return (
     <div className="w-100 h-[100vh] text-[16px] bg-black text-[#fffd8f] font-[Tektur] font-bold  max-sm:text-[14px]" style={{ backgroundImage: `url(${HeroImage})`, backgroundPosition: 'center'}}>
       <div className='w-100 pl-10 pr-10 pt-5 pb-5 flex flex-row justify-between max-sm:pl-1 max-sm:pr-1'>
