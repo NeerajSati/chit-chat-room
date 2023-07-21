@@ -39,16 +39,21 @@ function Login({switchPage}) {
             setDisableAuthActions(false);
             await dispatch(loginUser({email,password}))
             toast.success("Successfully Logged in!")
+            setDisableAuthActions(true);
         } catch(err){
             setDisableAuthActions(true);
             console.log(err)
         }
     }
 
-    const loginUserAsGuest = () => {
+    const loginUserAsGuest = async() => {
         try{
-            dispatch(loginUser({email,password}))
+            setDisableAuthActions(false);
+            await dispatch(loginUser({email : process.env.REACT_APP_GUEST_EMAIL,password: process.env.REACT_APP_GUEST_PASSWORD}))
+            toast.success("Successfully Logged in!")
+            setDisableAuthActions(true);
         } catch(err){
+            setDisableAuthActions(true);
             console.log(err)
         }
     }
