@@ -60,10 +60,7 @@ function Login({switchPage}) {
 
   return (
         <div className='bg-[#2f2f2f] py-7 px-10 flex flex-col items-center justify-center animate__animated animate__flipInX animate__faster max-sm:w-full max-sm:px-5'>
-            <div className='w-full flex flex-row items-center justify-between'>
-                <div className='w-full text-center text-[25px] max-sm:text-[20px] translate-x-[30px] max-sm:translate-x-[20px]'>Welcome Back!</div>
-                <Link to="/" className='cursor-pointer bg-[#ff000040] p-3 rounded-full text-[22px] max-sm:text-[16px] max-sm:right-[1rem]'><RxCross2/></Link>
-            </div>
+            <div className='w-full text-center text-[25px] max-sm:text-[20px]'>Welcome Back!</div>
             <div className='mt-2'>We are excited to see you again!</div>
             <div className='mt-5 flex flex-col items-start justify-start max-sm:w-full'>
                 <div className='text-[14px]'>Email</div>
@@ -84,6 +81,7 @@ function Login({switchPage}) {
             <button disabled={disableAuthActions} onClick={loginUserInit} className='w-full rounded-sm mt-5 py-2 px-2 bg-[#0FD345] text-black disabled:opacity-50 disabled:cursor-not-allowed'>Log In</button>
             <button disabled={disableAuthActions} onClick={loginUserAsGuest} className='w-full rounded-sm mt-3 py-2 px-2 bg-[#006FA2] disabled:opacity-50 disabled:cursor-not-allowed'>Continue as Guest</button>
             <div onClick={()=>switchPage('Register')} className='cursor-pointer mt-5 text-[#13A67D]'>Need an account? Register</div>
+            <Link to="/" className='cursor-pointer absolute right-[2rem] top-[1.5rem] bg-[#ff000040] p-3 rounded-full text-[22px] max-sm:text-[16px] max-sm:right-[1rem]'><RxCross2/></Link>
         </div>
   )
 }
