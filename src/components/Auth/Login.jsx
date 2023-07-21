@@ -36,24 +36,24 @@ function Login({switchPage}) {
             if(validateLoginData()){
                 return;
             }
-            setDisableAuthActions(false);
+            setDisableAuthActions(true);
             await dispatch(loginUser({email,password}))
             toast.success("Successfully Logged in!")
-            setDisableAuthActions(true);
+            setDisableAuthActions(false);
         } catch(err){
-            setDisableAuthActions(true);
+            setDisableAuthActions(false);
             console.log(err)
         }
     }
 
     const loginUserAsGuest = async() => {
         try{
-            setDisableAuthActions(false);
+            setDisableAuthActions(true);
             await dispatch(loginUser({email : process.env.REACT_APP_GUEST_EMAIL,password: process.env.REACT_APP_GUEST_PASSWORD}))
             toast.success("Successfully Logged in!")
-            setDisableAuthActions(true);
+            setDisableAuthActions(false);
         } catch(err){
-            setDisableAuthActions(true);
+            setDisableAuthActions(false);
             console.log(err)
         }
     }
