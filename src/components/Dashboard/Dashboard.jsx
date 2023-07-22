@@ -5,10 +5,50 @@ import {SlOptionsVertical} from 'react-icons/sl';
 import {BiMessageSquareAdd, BiArrowBack} from 'react-icons/bi';
 import {FaSearch} from 'react-icons/fa';
 import Chatlist from '../Chatlist/Chatlist';
-import NoChatImage from './../../assets/EmptyScreen.jpg'
+import ActiveChat from '../ActiveChat/ActiveChat';
 
 function Dashboard() {
-  const [chatList, setChatList] = useState([]);
+  const [chatList, setChatList] = useState([
+    {
+        "groupId": "64b60f779f1b489b27830493",
+        "lastMessage": "Hellllo!!!",
+        "lastMessageAt": "2023-07-19T08:32:41.797Z",
+        "lastSeen": "2023-07-19T08:32:41.608Z",
+        "isAdmin": true,
+        "groupName": "heheisitors Guild",
+        "groupDescription": "Meet new people here!",
+        "groupProfilePic": "hi",
+        "groupCreatedAt": "2023-07-18T04:05:11.694Z",
+        "unseenMessages": 3
+    },
+    {
+        "groupId": "64b6cee11d13eb62274ec95c",
+        "lastSeen": "2023-07-18T17:41:54.706Z",
+        "isAdmin": true,
+        "groupName": "heheVisitors Guild",
+        "groupDescription": "Meet new people here!",
+        "groupProfilePic": "https://chitchatroomdata.blob.core.windows.net/storage/group-profile-9f360ead-d30d-4a89-bfdf-551057483d8a.png",
+        "groupCreatedAt": "2023-07-18T17:41:53.805Z"
+    },
+    {
+        "groupId": "64b61b0855eb0896788e1bd0",
+        "lastSeen": "2023-07-18T04:54:32.931Z",
+        "isAdmin": true,
+        "groupName": "hedjVisitors Guild",
+        "groupDescription": "Meet some new people here!",
+        "groupProfilePic": "hi",
+        "groupCreatedAt": "2023-07-18T04:54:32.814Z"
+    },
+    {
+        "groupId": "64b618be3d0ed9c6cab47819",
+        "lastSeen": "2023-07-18T04:44:46.708Z",
+        "isAdmin": true,
+        "groupName": "Visitors Guild",
+        "groupDescription": "Meet new people here!",
+        "groupProfilePic": "hi",
+        "groupCreatedAt": "2023-07-18T04:44:46.537Z"
+    }
+  ]);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
 
@@ -45,7 +85,7 @@ function Dashboard() {
               <BiArrowBack className='text-[20px] text-green-400' onClick={() => setSearchTerm("")}/> :
               <FaSearch onClick={() => setSearchTerm("")}/>
             }
-            <input placeholder='Search my chats' value={searchTerm} onChange={(e)=>{setSearchTerm(e.target.value)}} className='bg-[#18191b] outline-none w-full ml-4' onFoc/>
+            <input placeholder='Search my chats' value={searchTerm} onChange={(e)=>{setSearchTerm(e.target.value)}} className='bg-[#18191b] outline-none w-full ml-4'/>
           </div>
         </div>
         <div className='overflow-y-scroll'>
@@ -53,10 +93,7 @@ function Dashboard() {
         </div>
       </div>
       <div className='flex-[6.5] bg-[#323338] w-full'>
-        <div className='w-full h-full flex items-center justify-center flex-col text-slate-400 font-bold select-none'>
-          Select any chat to see content!
-          <img src={NoChatImage} alt="No Chat selected" className='w-[60%]'></img>
-        </div>
+        <ActiveChat/>
       </div>
     </div>
   )

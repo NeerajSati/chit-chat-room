@@ -29,14 +29,24 @@ const getAllMessages = async(req,res)=>{
         allMessages.sort((a,b)=>a.createdAt-b.createdAt)
 
         let messageList = []
+        const colors = ['#eb7272', '#e9cf2a', '#aaff34', '#1de9e9', '#b3a6ff', '#e853ff'];
+        let assignColor = {}
         allMessages.forEach((message)=>{
+            let profileColor = '#e853ff';
+            if(assignColor[message.senderId._id]){
+                profileColor = assignColor[message.senderId._id];
+            } else{
+                assignColor[message.senderId._id] = colors[Math.floor(Math.random() * colors.length)];
+                profileColor = assignColor[message.senderId._id];
+            }
             messageList.push({
                 _id: message._id,
                 senderUserName: message.senderId.username,
                 senderProfilePic: message.senderId.profilePic,
                 message: message.message,
                 messageTime: message.createdAt,
-                sentByUser: message.senderId._id.equals(userId)
+                sentByUser: message.senderId._id.equals(userId),
+                profileColor: profileColor
             })
         })
 

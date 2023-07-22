@@ -7,7 +7,7 @@ function Chatlist({chatList}) {
     {
         chatList && chatList.map((chat)=>{
             return (
-            <ListItem chat={chat}/>
+            <ListItem chat={chat} key={chat.groupId}/>
             )
         })
     }
