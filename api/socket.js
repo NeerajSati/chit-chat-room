@@ -1,5 +1,5 @@
 const socketIo = require("socket.io")
-const {authenticateSocketConnection} = require("./utils/jwtVerify");
+const {authenticateSocketMessage} = require("./utils/jwtVerify");
 const {sendMessageViaSocket, updateGroupLastSeen} = require("./controllers/message")
 
 const socketHelper = async(server) => {
@@ -8,13 +8,16 @@ const socketHelper = async(server) => {
           origin: "*",
         },
     });
-    io.use(authenticateSocketConnection);
+    // io.use(authenticateSocketConnection);
     io.on('connection', (socket) => {
         socket.emit("hello", "world");
 
-        console.log(socket.user.username,"Just Connected!");
+        console.log("A user Just Connected!");
 
         socket.on('send_message', async (data) => {
+            if(!authenticateSocketMessage(socket, data.auth)){
+                return;
+            }
             const {groupId, message, tempMessageId} = data;
             if(!groupId || !message || !tempMessageId){
                 return;
@@ -41,6 +44,9 @@ const socketHelper = async(server) => {
         });
 
         socket.on('message_read_ack', async (data) => {
+            if(!authenticateSocketMessage(socket, data.auth)){
+                return;
+            }
             const {groupId} = data;
             if(!groupId){
                 return;

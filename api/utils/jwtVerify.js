@@ -29,4 +29,14 @@ const authenticateSocketConnection = (socket, next) =>{
   next();
 }
 
-module.exports = {generateToken, jwtAuthenticationMiddleware, authenticateSocketConnection}
+const authenticateSocketMessage = (socket, token) =>{
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_VERIFY);
+    socket.user = decoded;
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+module.exports = {generateToken, jwtAuthenticationMiddleware, authenticateSocketConnection, authenticateSocketMessage}
