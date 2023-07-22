@@ -56,7 +56,7 @@ function Dashboard() {
     await dispatch(chatActions.markMessageSent(data))
   }
   const messageReceivedHandler = async(data) =>{
-    console.log(data)
+    await dispatch(chatActions.receiveNewMessage(data))
   }
 
   return (

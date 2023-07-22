@@ -29,15 +29,17 @@ const socketHelper = async(server) => {
                     message: messageSentData.message,
                     messageTime: messageSentData.createdAt,
                     senderUserName: socket.user.username,
-                    senderProfilePic: socket.user.profilePic
+                    senderProfilePic: socket.user.profilePic, 
+                    groupName: messageSentData.groupName, 
+                    groupProfilePic: messageSentData.groupProfilePic
                 }
 
                 socket.emit("message_sent", {
-                    groupId: messageSentData.groupId,
+                    groupId,
                     tempMessageId
                 });
                 socket.broadcast.emit("message_received", {
-                    groupId: messageSentData.groupId,
+                    groupId,
                     message: receivedMessage
                 });
             }

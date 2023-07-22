@@ -78,7 +78,11 @@ const sendMessageViaSocket = async(userId, groupId, message)=>{
             message
         })
         const savedMessage = await createMessage.save();
-        return savedMessage
+
+        const groupDetails = await Group.findById(groupId, 'groupName groupProfilePic');
+
+        // return savedMessage;
+        return {_id: savedMessage._id, message: savedMessage.message, createdAt: savedMessage.createdAt, groupName: groupDetails.groupName, groupProfilePic: groupDetails.groupProfilePic}
     } catch(err){
         console.log("sendMessageViaSocket Error", err)
         return;

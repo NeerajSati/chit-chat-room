@@ -93,6 +93,32 @@ export const chat = createSlice({
         state.chatMessagesMap[groupId][msgIdx].messageStatus="send"
       }
     },
+    receiveNewMessage: (state, action) => {
+      const {groupId, message} = action.payload;
+
+      if(state.chatMessagesMap[groupId]){
+        state.chatMessagesMap[groupId].push(message);
+      }
+      const chatIdx = state.chats.findLastIndex((chat)=>chat.groupId === groupId)
+      // when we get a message in existing group, just append message there
+      if(chatIdx >= 0){
+        let recentChat = state.chats.splice(chatIdx, 1);
+        recentChat[0].lastMessage = message.message;
+        recentChat[0].lastMessageAt = String(new Date());
+        recentChat[0].unseenMessages = recentChat[0].unseenMessages + 1;
+        state.chats.unshift(recentChat[0])
+      } else{
+        // if message on new group, create a new group
+        state.chats.unshift({
+          groupId,
+          lastMessage: message.message,
+          lastMessageAt: message.messageTime,
+          groupName: message.groupName,
+          groupProfilePic: message.groupProfilePic,
+          unseenMessages: 1
+        })
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
