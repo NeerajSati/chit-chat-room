@@ -20,7 +20,7 @@ function ChatOpened({messageList, activeChatId}) {
   return (
     <div className='bg-[#212326] w-full h-screen flex flex-col justify-between'>
         <div className='w-full bg-gradient-to-r from-[#00070b60] to-[#00325660] bg-[#111213] h-[90px] cursor-pointer flex justify-between items-center'>
-          <div className='ml-2 flex flex-row items-center max-md:w-[40px] max-md:h-[40px]'>
+          <div className='ml-2 flex flex-row items-center'>
             <img alt="profileImage" className='w-[50px] h-[50px] rounded-full border-2' src={activeChatProfilePic}></img>
             <div className='flex flex-col pl-4'>
                 <div className='text-[18px] font-bold text-[#e1e1e1]'>{activeChatName}</div>

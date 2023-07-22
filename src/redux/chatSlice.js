@@ -8,7 +8,7 @@ export const getJoinedChats = createAsyncThunk(
   async (payload, thunkAPI) => {
       const authToken = JSON.parse(localStorage.getItem('authToken'));
       try {
-        const joinedGroups = await axios.post(getGroupsJoined(), {
+        const joinedGroups = await axios.get(getGroupsJoined(), {
           headers: {
             authorization: `Bearer ${authToken}`,
           }
@@ -31,7 +31,7 @@ export const getAllMessages = createAsyncThunk(
     const authToken = JSON.parse(localStorage.getItem('authToken'));
     const {groupId} = payload;
     try {
-      const groupMessages = await axios.post(getGroupMessages(groupId), {
+      const groupMessages = await axios.get(getGroupMessages(groupId), {
         headers: {
           authorization: `Bearer ${authToken}`,
         }

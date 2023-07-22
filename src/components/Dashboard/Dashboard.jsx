@@ -6,62 +6,32 @@ import {BiMessageSquareAdd, BiArrowBack} from 'react-icons/bi';
 import {FaSearch} from 'react-icons/fa';
 import Chatlist from '../Chatlist/Chatlist';
 import ActiveChat from '../ActiveChat/ActiveChat';
+import { useDispatch, useSelector } from 'react-redux'
+import {getJoinedChats} from '../../redux/chatSlice'
 
 function Dashboard() {
-  const [chatList, setChatList] = useState([
-    {
-        "groupId": "64b60f779f1b489b27830493",
-        "lastMessage": "Hellllo!!!",
-        "lastMessageAt": "2023-07-19T08:32:41.797Z",
-        "lastSeen": "2023-07-19T08:32:41.608Z",
-        "isAdmin": true,
-        "groupName": "heheisitors Guild",
-        "groupDescription": "Meet new people here!",
-        "groupProfilePic": "hi",
-        "groupCreatedAt": "2023-07-18T04:05:11.694Z",
-        "unseenMessages": 3
-    },
-    {
-        "groupId": "64b6cee11d13eb62274ec95c",
-        "lastSeen": "2023-07-18T17:41:54.706Z",
-        "isAdmin": true,
-        "groupName": "heheVisitors Guild",
-        "groupDescription": "Meet new people here!",
-        "groupProfilePic": "https://chitchatroomdata.blob.core.windows.net/storage/group-profile-9f360ead-d30d-4a89-bfdf-551057483d8a.png",
-        "groupCreatedAt": "2023-07-18T17:41:53.805Z"
-    },
-    {
-        "groupId": "64b61b0855eb0896788e1bd0",
-        "lastSeen": "2023-07-18T04:54:32.931Z",
-        "isAdmin": true,
-        "groupName": "hedjVisitors Guild",
-        "groupDescription": "Meet some new people here!",
-        "groupProfilePic": "hi",
-        "groupCreatedAt": "2023-07-18T04:54:32.814Z"
-    },
-    {
-        "groupId": "64b618be3d0ed9c6cab47819",
-        "lastSeen": "2023-07-18T04:44:46.708Z",
-        "isAdmin": true,
-        "groupName": "Visitors Guild",
-        "groupDescription": "Meet new people here!",
-        "groupProfilePic": "hi",
-        "groupCreatedAt": "2023-07-18T04:44:46.537Z"
-    }
-  ]);
+  const chatList = useSelector((state) => state.chat.chats);
+  const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedChats, setSelectedChats] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-      const authToken = JSON.parse(localStorage.getItem('authToken'));
-      if(!authToken){
-          navigate('/')
-      }
+    const authToken = JSON.parse(localStorage.getItem('authToken'));
+    if(!authToken){
+        navigate('/')
+        return;
+    }
+    dispatch(getJoinedChats())
   }, []);
 
   useEffect(() => {
-    setChatList((chatList.filter((e)=>e.groupName.includes(searchTerm))))
-}, [searchTerm]);
+    setSelectedChats(chatList)
+  }, [chatList]);
+
+  useEffect(() => {
+    setSelectedChats(chatList.filter((e)=>e.groupName.toLowerCase().includes(searchTerm.toLowerCase())));
+}, [chatList, searchTerm]);
 
   return (
     <div className='flex flex-row w-full h-screen'>
@@ -89,7 +59,7 @@ function Dashboard() {
           </div>
         </div>
         <div className='overflow-y-scroll'>
-          <Chatlist/>
+          <Chatlist chatList={selectedChats}/>
         </div>
       </div>
       <div className='flex-[6.5] bg-[#323338] w-full'>
