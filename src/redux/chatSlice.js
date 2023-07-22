@@ -60,10 +60,15 @@ export const chat = createSlice({
   reducers: {
     updateActiveChatId: (state, action) => {
       state.activeChatId = action.payload;
+      const chatIdx = state.chats.findLastIndex((chat)=>chat.groupId === state.activeChatId)
+      if(chatIdx >= 0){
+        state.chats[chatIdx].unseenMessages = 0;
+      }
     },
     sendMessagePending: (state, action) => {
       const {message,temporaryId} = action.payload;
       state.chatMessagesMap[state.activeChatId].push({
+        "_id": temporaryId,
         "temporaryId": temporaryId,
         "messageTime": String(new Date()),
         "sentByUser": true,
@@ -71,6 +76,15 @@ export const chat = createSlice({
         "profileColor": "#507dff",
         message,
       })
+      const chatIdx = state.chats.findLastIndex((chat)=>chat.groupId === state.activeChatId)
+      if(chatIdx >= 0){
+        let recentChat = state.chats.splice(chatIdx, 1);
+        recentChat[0].lastMessage = message;
+        recentChat[0].lastMessageAt = String(new Date());
+        recentChat[0].unseenMessages = 0;
+
+        state.chats.unshift(recentChat[0])
+      }
     },
     markMessageSent: (state, action) => {
       const {groupId,tempMessageId} = action.payload;
