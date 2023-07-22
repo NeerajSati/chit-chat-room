@@ -52,7 +52,8 @@ export const chat = createSlice({
   name: 'chat',
   initialState: {
     chats: [],
-    chatMessages: {},
+    chatMessagesMap: {},
+    chatDetailsMap: {},
     newChatMessagesIdx: {},
     activeChatId: ""
   },
@@ -62,7 +63,7 @@ export const chat = createSlice({
     },
     sendMessagePending: (state, action) => {
       const {message,temporaryId} = action.payload;
-      state.chatMessages[state.activeChatId].push({
+      state.chatMessagesMap[state.activeChatId].push({
         "temporaryId": temporaryId,
         "messageTime": String(new Date()),
         "sentByUser": true,
@@ -78,6 +79,15 @@ export const chat = createSlice({
     })
     .addCase(getJoinedChats.fulfilled, (state, action) => {
       state.chats = action.payload.data;
+      state.chats.forEach((chat)=>{
+        state.chatDetailsMap[chat.groupId] = {
+          groupName: chat.groupName,
+          groupDescription: chat.groupDescription,
+          groupProfilePic: chat.groupProfilePic,
+          groupCreatedAt: chat.groupCreatedAt
+
+        }
+      })
     })
     .addCase(getJoinedChats.rejected, (state, action) => {
       throw action.error;
@@ -85,7 +95,7 @@ export const chat = createSlice({
     .addCase(getAllMessages.pending, (state, action) => {
     })
     .addCase(getAllMessages.fulfilled, (state, action) => {
-      state.chatMessages[action.payload.groupId] = action.payload.messages.messageList;
+      state.chatMessagesMap[action.payload.groupId] = action.payload.messages.messageList;
       state.newChatMessagesIdx[action.payload.groupId] = action.payload.messages.newMessagesIdx;
     })
     .addCase(getAllMessages.rejected, (state, action) => {
@@ -94,6 +104,6 @@ export const chat = createSlice({
   },
 })
 
-export const chatActions = chat.actions;
+export const chatActions = {...chat.actions, getAllMessages, getJoinedChats};
 
 export default chat.reducer

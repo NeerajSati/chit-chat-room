@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import {chatActions} from '../../redux/chatSlice'
 import TimeAgo from 'javascript-time-ago'
 import en from 'javascript-time-ago/locale/en'
 TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
 
 function ListItem({chat}) {
+
   return (
     <div className='flex w-full border-b-2 border-gray-400 pb-2 text-gray-200 cursor-pointer'>
                 <div className='w-[70px] flex items-center justify-between pl-2'>
@@ -30,8 +33,9 @@ function ListItem({chat}) {
                         <div className='flex'>
                             {chat.isAdmin && 
                             <div className='px-3 h-5 font-bold text-[14px] bg-[#62c16297] flex items-center justify-center rounded-full mr-2 text-black'>Admin</div>}
-                            {chat.unseenMessages && 
-                            <div className='px-1 h-5 bg-green-500 text-black font-bold flex items-center justify-center rounded-full'>{chat.unseenMessages}</div>}
+                            {chat.unseenMessages ?
+                            <div className='px-1 h-5 bg-green-500 text-black font-bold flex items-center justify-center rounded-full'>{chat.unseenMessages}</div>:<></>
+                            }
                         </div>
                     </div>
                 </div>

@@ -7,7 +7,7 @@ import {FaSearch} from 'react-icons/fa';
 import Chatlist from '../Chatlist/Chatlist';
 import ActiveChat from '../ActiveChat/ActiveChat';
 import { useDispatch, useSelector } from 'react-redux'
-import {getJoinedChats} from '../../redux/chatSlice'
+import {chatActions} from '../../redux/chatSlice'
 
 function Dashboard() {
   const chatList = useSelector((state) => state.chat.chats);
@@ -22,7 +22,7 @@ function Dashboard() {
         navigate('/')
         return;
     }
-    dispatch(getJoinedChats())
+    dispatch(chatActions.getJoinedChats())
   }, []);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ function Dashboard() {
 
   useEffect(() => {
     setSelectedChats(chatList.filter((e)=>e.groupName.toLowerCase().includes(searchTerm.toLowerCase())));
-}, [chatList, searchTerm]);
+  }, [chatList, searchTerm]);
 
   return (
     <div className='flex flex-row w-full h-screen'>
