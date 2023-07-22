@@ -30,10 +30,11 @@ function ListItem({chat}) {
                             <div className='text-[14px]'>{chat.groupDescription}</div>
                         }
                         <div className='flex'>
-                            {chat.isAdmin && 
-                            <div className='px-3 h-5 font-bold text-[14px] bg-[#62c16297] flex items-center justify-center rounded-full mr-2 text-black'>Admin</div>}
                             {chat.unseenMessages ?
-                            <div className='px-1 h-5 bg-green-500 text-black font-bold flex items-center justify-center rounded-full'>{chat.unseenMessages}</div>:<></>
+                            <div className='px-1 mr-2 h-5 bg-green-500 text-black font-bold flex items-center justify-center rounded-full'>{chat.unseenMessages}</div>:<></>
+                            }
+                            {chat.isAdmin && 
+                            <div className='px-3 h-5 font-semibold text-[12px] bg-[#00ffef70] flex items-center justify-center rounded-full text-black'>Admin</div>
                             }
                         </div>
                     </div>

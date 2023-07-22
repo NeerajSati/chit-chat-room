@@ -13,6 +13,7 @@ import {socket} from '../utils/socket'
 function Dashboard() {
   const chatList = useSelector((state) => state.chat.chats);
   const authToken = useSelector((state) => state.auth.authToken);
+  const activeChatId = useSelector((state) => state.chat.activeChatId);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedChats, setSelectedChats] = useState([]);

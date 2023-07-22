@@ -124,6 +124,16 @@ export const chat = createSlice({
           unseenMessages: 1
         })
       }
+
+      // current group received a message set unseencount to 0
+      if(state.chats[0].groupId === state.activeChatId){
+        state.chats[0].unseenMessages = 0;
+        const authToken = JSON.parse(localStorage.getItem('authToken'));
+        socket.emit("message_read_ack",{
+          "groupId": state.activeChatId,
+          "auth": authToken
+        })
+      }
     },
   },
   extraReducers: (builder) => {
