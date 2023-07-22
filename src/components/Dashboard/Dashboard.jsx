@@ -20,9 +20,9 @@ function Dashboard() {
     const authToken = JSON.parse(localStorage.getItem('authToken'));
     if(!authToken){
         navigate('/')
-        return;
+    } else{
+      dispatch(chatActions.getJoinedChats())
     }
-    dispatch(chatActions.getJoinedChats())
   }, []);
 
   useEffect(() => {
@@ -38,7 +38,11 @@ function Dashboard() {
       <div className='flex-[3.5] bg-[#2B2D31] w-full flex flex-col'>
         <div className='h-[70px] w-full bg-[#111213] flex items-center justify-between'>
           <div className='w-[50px] h-[50px] ml-2 relative cursor-pointer max-md:w-[40px] max-md:h-[40px]'>
-            <img alt="profileImage" className='w-full h-full rounded-full' src="https://images.pexels.com/photos/17102422/pexels-photo-17102422/free-photo-of-wood-landscape-water-summer.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"></img>  
+            <img alt="profileImage" 
+            className='w-full h-full rounded-full' 
+            onError={(e)=>{e.target.onerror = null; e.target.src=process.env.REACT_APP_FALLBACK_IMAGE}}
+            src="https://images.pexels.com/photos/17102422/pexels-photo-17102422/free-photo-of-wood-landscape-water-summer.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+            ></img>  
             <div className='absolute bottom-[-8px] right-[-8px] w-5 h-5 bg-green-400 flex items-center justify-center rounded-lg'>
               <BiMessageSquareAdd/>
             </div>

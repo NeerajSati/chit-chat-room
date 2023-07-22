@@ -17,23 +17,23 @@ function ChatOpened() {
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        if(!activeChatId){
-            return;
+        if(activeChatId){
+          loadActiveChatMessages();
+          if(Object.keys(chatDetailsMap).includes(activeChatId)){
+            setActiveChatDetails(chatDetailsMap[activeChatId]);
+          }
         }
-        loadActiveChatMessages();
-    }, activeChatId)
+    }, [activeChatId])
 
     useEffect(() => {
       if(Object.keys(messageListMap).includes(activeChatId)){
         setActiveChatMessages(messageListMap[activeChatId]);
-        return;
       }
     },[messageListMap])
 
     useEffect(() => {
       if(Object.keys(chatDetailsMap).includes(activeChatId)){
         setActiveChatDetails(chatDetailsMap[activeChatId]);
-        return;
       }
     },[chatDetailsMap])
 
@@ -48,14 +48,14 @@ function ChatOpened() {
         //if we already have loaded chat data
         if(Object.keys(messageListMap).includes(activeChatId)){
           setActiveChatMessages(messageListMap[activeChatId]);
-          return;
-        }
-        try {
-          await dispatch(
-            chatActions.getAllMessages({ groupId: activeChatId })
-          );
-        } catch (e) {
-          console.log(e);
+        } else{
+          try {
+            await dispatch(
+              chatActions.getAllMessages({ groupId: activeChatId })
+            );
+          } catch (e) {
+            console.log(e);
+          }
         }
     }
 
@@ -63,7 +63,11 @@ function ChatOpened() {
     <div className='bg-[#212326] w-full h-screen flex flex-col justify-between'>
         <div className='w-full bg-gradient-to-r from-[#00070b60] to-[#00325660] bg-[#111213] h-[90px] cursor-pointer flex justify-between items-center'>
           <div className='ml-2 flex flex-row items-center'>
-            <img alt="profileImage" className='w-[50px] h-[50px] rounded-full border-2' src={activeChatDetails.groupProfilePic}></img>
+            <img alt="profileImage" 
+            className='w-[50px] h-[50px] rounded-full border-2' 
+            onError={(e)=>{e.target.onerror = null; e.target.src=process.env.REACT_APP_FALLBACK_IMAGE}}
+            src={activeChatDetails.groupProfilePic}
+            ></img>
             <div className='flex flex-col pl-4'>
                 <div className='text-[18px] font-bold text-[#e1e1e1]'>{activeChatDetails.groupName}</div>
                 <div className='text-[12px] font-semibold text-[#888888]'>{activeChatDetails.groupDescription}</div>

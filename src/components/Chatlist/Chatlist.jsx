@@ -17,8 +17,8 @@ function Chatlist({chatList}) {
     {
         chatList && chatList.map((chat)=>{
             return (
-              <div onClick={()=>{setActiveChatId(chat.groupId)}}>
-                <ListItem chat={chat} key={chat.groupId}/>
+              <div key={chat.groupId} onClick={()=>{setActiveChatId(chat.groupId)}}>
+                <ListItem chat={chat}/>
               </div>
             )
         })

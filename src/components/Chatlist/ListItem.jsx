@@ -7,7 +7,6 @@ TimeAgo.addLocale(en)
 const timeAgo = new TimeAgo('en-US')
 
 function ListItem({chat}) {
-
   return (
     <div className='flex w-full border-b-2 border-gray-400 pb-2 text-gray-200 cursor-pointer'>
                 <div className='w-[70px] flex items-center justify-between pl-2'>
