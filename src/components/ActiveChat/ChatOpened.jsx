@@ -1,6 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react'
 import {BiSend} from 'react-icons/bi'
 import Message from './Message'
+import {BiMessageSquareAdd} from 'react-icons/bi';
+import {AiOutlineUsergroupAdd, AiOutlineInfoCircle} from 'react-icons/ai';
 
 function ChatOpened({messageList, activeChatId}) {
     const [sendMessageQuery, setSendMessageQuery] = useState("");
@@ -17,8 +19,17 @@ function ChatOpened({messageList, activeChatId}) {
 
   return (
     <div className='bg-[#212326] w-full h-screen flex flex-col justify-between'>
-        <div className='w-full bg-blue-950 h-[70px]'>
-
+        <div className='w-full bg-gradient-to-r from-[#00070b60] to-[#00325660] bg-[#111213] h-[90px] cursor-pointer flex justify-between items-center'>
+          <div className='ml-2 flex flex-row items-center max-md:w-[40px] max-md:h-[40px]'>
+            <img alt="profileImage" className='w-[50px] h-[50px] rounded-full border-2' src={activeChatProfilePic}></img>
+            <div className='flex flex-col pl-4'>
+                <div className='text-[18px] font-bold text-[#e1e1e1]'>{activeChatName}</div>
+                <div className='text-[12px] font-semibold text-[#888888]'>{activeChatDescription}</div>
+            </div>
+          </div>
+          <div className='h-[70px] flex items-center mr-5'>
+            <AiOutlineInfoCircle className='text-[20px] text-gray-200 cursor-pointer'/>
+          </div>
         </div>
         <div ref={messageRef} className='h-full overflow-y-scroll'>
             {messageList && messageList.length ? (
