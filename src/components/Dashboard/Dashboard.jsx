@@ -89,7 +89,7 @@ function Dashboard() {
           </div>
         </div>
         <div className='overflow-y-scroll'>
-          <Chatlist chatList={chatList}/>
+          <Chatlist/>
         </div>
       </div>
       <div className='flex-[6.5] bg-[#323338] w-full'>

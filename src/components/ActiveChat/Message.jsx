@@ -24,7 +24,7 @@ function Message({messageContent}) {
                     alt="Group Profile"
                     onError={(e)=>{e.target.onerror = null; e.target.src=process.env.REACT_APP_FALLBACK_IMAGE}}></img>
                 </div>
-                <div className='max-w-[60%] pl-3 pr-2 py-1 bg-[#ffffff38] text-[15px] text-white mt-2 rounded-lg rounded-tl-none'>
+                <div className='max-w-[60%] pl-3 pr-2 py-1 bg-[#00000061] text-[15px] text-white mt-2 rounded-lg rounded-tl-none'>
                     <div style={{color: messageContent.profileColor}} className='font-bold text-[14px] pb-1'>@{messageContent.senderUserName}</div>
                     <div className='flex flex-row text-justify'>
                         <div>{messageContent.message}</div>

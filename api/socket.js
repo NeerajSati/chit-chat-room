@@ -31,7 +31,6 @@ const socketHelper = async(server) => {
 
                 socket.emit("message_sent", {
                     groupId: messageSentData.groupId,
-                    message: receivedMessage,
                     tempMessageId
                 });
                 socket.broadcast.emit("message_received", {

@@ -55,9 +55,6 @@ export const authSlice = createSlice({
     status: "IDLE"
   },
   reducers: {
-    registerUser: (state, action) => {
-        console.log("Registering")
-    }
   },
   extraReducers: (builder) => {
     builder
