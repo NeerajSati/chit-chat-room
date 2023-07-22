@@ -23,6 +23,7 @@ const getAllMessages = async(req,res)=>{
         const groupId = req.params.id
         const groupLastSeen = req.groupLastSeen
         const groupMemberId = req.groupMemberId
+        const userId = req.userId
 
         const allMessages = await Message.find({groupId},'message createdAt').populate("senderId",'username profilePic');
         allMessages.sort((a,b)=>a.createdAt-b.createdAt)
@@ -34,7 +35,8 @@ const getAllMessages = async(req,res)=>{
                 senderUserName: message.senderId.username,
                 senderProfilePic: message.senderId.profilePic,
                 message: message.message,
-                messageTime: message.createdAt
+                messageTime: message.createdAt,
+                sentByUser: message.senderId._id.equals(userId)
             })
         })
 
