@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { getGroupsJoined, getGroupMessages } from '../components/utils/api';
 import axios from 'axios'
 import { toast } from 'react-toastify';
+import {socket} from '../components/utils/socket'
 
 export const getJoinedChats = createAsyncThunk(
   "chat/getGroups",
@@ -61,8 +62,13 @@ export const chat = createSlice({
     updateActiveChatId: (state, action) => {
       state.activeChatId = action.payload;
       const chatIdx = state.chats.findLastIndex((chat)=>chat.groupId === state.activeChatId)
-      if(chatIdx >= 0){
+      if(chatIdx >= 0 && state.chats[chatIdx].unseenMessages > 0){
         state.chats[chatIdx].unseenMessages = 0;
+        const authToken = JSON.parse(localStorage.getItem('authToken'));
+        socket.emit("message_read_ack",{
+          "groupId": state.activeChatId,
+          "auth": authToken
+        })
       }
     },
     sendMessagePending: (state, action) => {
