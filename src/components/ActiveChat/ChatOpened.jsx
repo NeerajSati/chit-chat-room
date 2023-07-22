@@ -5,6 +5,7 @@ import {BiMessageSquareAdd} from 'react-icons/bi';
 import {AiOutlineUsergroupAdd, AiOutlineInfoCircle} from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux'
 import {chatActions} from '../../redux/chatSlice'
+import {socket} from '../utils/socket'
 
 function ChatOpened() {
     const [sendMessageQuery, setSendMessageQuery] = useState("");
@@ -59,6 +60,24 @@ function ChatOpened() {
         }
     }
 
+    const sendMessageHandler = async() => {
+      const authToken = JSON.parse(localStorage.getItem('authToken'));
+      if(sendMessageQuery && authToken){
+        const tempMessageId = String(Date.now());
+        await dispatch(chatActions.sendMessagePending({
+          temporaryId: tempMessageId,
+          message: sendMessageQuery
+        }))
+        socket.emit("send_message",{
+          "groupId": activeChatId, 
+          "message": sendMessageQuery, 
+          "tempMessageId":tempMessageId, 
+          "auth":authToken
+        })
+        setSendMessageQuery("")
+      }
+    }
+
   return (
     <div className='bg-[#212326] w-full h-screen flex flex-col justify-between'>
         <div className='w-full bg-gradient-to-r from-[#00070b60] to-[#00325660] bg-[#111213] h-[90px] cursor-pointer flex justify-between items-center'>
@@ -90,8 +109,12 @@ function ChatOpened() {
         </div>
         <div className='bg-[#202C33] h-[90px] w-full flex items-center justify-center'>
             <div className='bg-[#505257] w-[90%] h-[50px] rounded-lg px-4 pr-2 py-2 flex flex-row justify-between'>
-                <input placeholder='Type Hey!' value={sendMessageQuery} onChange={(e)=>{setSendMessageQuery(e.target.value)}} className='text-white bg-transparent outline-none w-[90%] pr-5'></input>
-                {sendMessageQuery && <div className='bg-[#212326] cursor-pointer w-[40px] h-[40px] rounded-full flex items-center justify-center mr-3'>
+                <input placeholder='Type Hey!' 
+                value={sendMessageQuery} 
+                onChange={(e)=>{setSendMessageQuery(e.target.value)}} 
+                onKeyDown={(e) => {if (e.key === "Enter") {sendMessageHandler()}}}
+                className='text-white bg-transparent outline-none w-[90%] pr-5'></input>
+                {sendMessageQuery && <div onClick={sendMessageHandler} className='bg-[#212326] cursor-pointer w-[40px] h-[40px] rounded-full flex items-center justify-center mr-3'>
                     <BiSend className='text-[25px] text-[#2eb99f]'/>
                 </div>}
             </div>

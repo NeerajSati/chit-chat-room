@@ -72,6 +72,13 @@ export const chat = createSlice({
         message,
       })
     },
+    markMessageSent: (state, action) => {
+      const {groupId,tempMessageId} = action.payload;
+      const msgIdx = state.chatMessagesMap[groupId].findLastIndex((chat)=>chat.temporaryId === tempMessageId)
+      if(msgIdx >= 0){
+        state.chatMessagesMap[groupId][msgIdx].messageStatus="send"
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -85,7 +92,6 @@ export const chat = createSlice({
           groupDescription: chat.groupDescription,
           groupProfilePic: chat.groupProfilePic,
           groupCreatedAt: chat.groupCreatedAt
-
         }
       })
     })

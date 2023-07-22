@@ -8,9 +8,11 @@ import Chatlist from '../Chatlist/Chatlist';
 import ActiveChat from '../ActiveChat/ActiveChat';
 import { useDispatch, useSelector } from 'react-redux'
 import {chatActions} from '../../redux/chatSlice'
+import {socket} from '../utils/socket'
 
 function Dashboard() {
   const chatList = useSelector((state) => state.chat.chats);
+  const authToken = useSelector((state) => state.auth.authToken);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedChats, setSelectedChats] = useState([]);
@@ -32,6 +34,30 @@ function Dashboard() {
   useEffect(() => {
     setSelectedChats(chatList.filter((e)=>e.groupName.toLowerCase().includes(searchTerm.toLowerCase())));
   }, [chatList, searchTerm]);
+
+  useEffect(() => {
+      socket.on('connect', () => {
+        console.log("connected");
+      });
+      socket.on('message_sent', (data) => {
+        messageSentHandler(data);
+      });
+      socket.on('message_received', (data) => {
+        messageReceivedHandler(data);
+      });
+      return () => {
+        socket.off('connect');
+        socket.off('message_received');
+        socket.off('message_sent');
+      };
+  }, [authToken]);
+
+  const messageSentHandler = async(data) =>{
+    await dispatch(chatActions.markMessageSent(data))
+  }
+  const messageReceivedHandler = async(data) =>{
+    console.log(data)
+  }
 
   return (
     <div className='flex flex-row w-full h-screen'>
