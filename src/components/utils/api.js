@@ -7,18 +7,26 @@ export const loginAPI = () => {
   return `${baseUrl}/auth/login`;
 };
 
-export const getGroupsJoined = () => {
+export const getJoinedChatsAPI = () => {
   return `${baseUrl}/groups/joined`;
 };
 
-export const getGroupMessages = (groupId) => {
+export const getGroupMessagesAPI = (groupId) => {
   return `${baseUrl}/messages/all/${groupId}`;
 };
 
-export const getSearchedUsers = () => {
+export const getSearchedUsersAPI = () => {
   return `${baseUrl}/user/search`;
 };
 
-export const postNewGroup = () => {
+export const postNewGroupAPI = () => {
   return `${baseUrl}/groups/create`;
+};
+
+export const getGroupDetailsAPI = (groupId) => {
+  return `${baseUrl}/groups/details/${groupId}`;
+};
+
+export const getGroupMembersAPI = (groupId) => {
+  return `${baseUrl}/groups/members/${groupId}`;
 };

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getGroupsJoined, getGroupMessages, getSearchedUsers, postNewGroup } from '../components/utils/api';
+import { getJoinedChatsAPI, getGroupMessagesAPI, getSearchedUsersAPI, postNewGroupAPI, getGroupMembersAPI, getGroupDetailsAPI } from '../components/utils/api';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import {socket} from '../components/utils/socket'
@@ -9,7 +9,7 @@ export const getJoinedChats = createAsyncThunk(
   async (payload, thunkAPI) => {
       const authToken = JSON.parse(localStorage.getItem('authToken'));
       try {
-        const joinedGroups = await axios.get(getGroupsJoined(), {
+        const joinedGroups = await axios.get(getJoinedChatsAPI(), {
           headers: {
             authorization: `Bearer ${authToken}`,
           }
@@ -32,7 +32,7 @@ export const searchUsers = createAsyncThunk(
       const authToken = JSON.parse(localStorage.getItem('authToken'));
       try {
         const {searchUsername} = payload;
-        const userList = await axios.get(getSearchedUsers(), {
+        const userList = await axios.get(getSearchedUsersAPI(), {
           headers: {
             authorization: `Bearer ${authToken}`,
           },
@@ -56,7 +56,7 @@ export const getAllMessages = createAsyncThunk(
     const authToken = JSON.parse(localStorage.getItem('authToken'));
     const {groupId} = payload;
     try {
-      const groupMessages = await axios.get(getGroupMessages(groupId), {
+      const groupMessages = await axios.get(getGroupMessagesAPI(groupId), {
         headers: {
           authorization: `Bearer ${authToken}`,
         }
@@ -79,7 +79,7 @@ export const createNewGroup = createAsyncThunk(
     const authToken = JSON.parse(localStorage.getItem('authToken'));
     const {formContent} = payload
     try {
-      const data = await axios.post(postNewGroup(),formContent, {
+      const data = await axios.post(postNewGroupAPI(),formContent, {
         headers: {
           authorization: `Bearer ${authToken}`,
           "content-type": "multipart/form-data",
@@ -98,13 +98,44 @@ export const createNewGroup = createAsyncThunk(
   }
 );
 
+export const getGroupDetails = createAsyncThunk(
+  "chat/getGroupDetails",
+  async (payload, thunkAPI) => {
+    const authToken = JSON.parse(localStorage.getItem('authToken'));
+    const {groupId} = payload;
+    try {
+      const groupDetailsAPI = axios.get(getGroupDetailsAPI(groupId), {
+        headers: {
+          authorization: `Bearer ${authToken}`,
+        }
+      });
+      const groupMembersAPI = axios.get(getGroupMembersAPI(groupId), {
+        headers: {
+          authorization: `Bearer ${authToken}`,
+        }
+      });
+      const [groupDetails, groupMembers] = await Promise.all([groupDetailsAPI,groupMembersAPI])
+
+      return {members: groupMembers.data.data, currentUser: groupMembers.data.userData, details: groupDetails.data.data};
+    } catch (err) {
+      if(err?.response?.data?.msg){
+        toast.error(err?.response?.data?.msg);
+      } else{
+        toast.error("Something went wrong");
+      }
+      throw err;
+    }
+  }
+);
+
 const initialState = {
   chats: [],
   chatMessagesMap: {},
   chatDetailsMap: {},
   newChatMessagesIdx: {},
   activeChatId: "",
-  searchedUsers: []
+  searchedUsers: [],
+  activeGroupDetails: {}
 };
 
 export const chat = createSlice({
@@ -227,9 +258,20 @@ export const chat = createSlice({
     .addCase(createNewGroup.rejected, (state, action) => {
       throw action.error;
     })
+    .addCase(getGroupDetails.fulfilled, (state, action) => {
+      // {members: groupMembers.data.data, currentUser: groupMembers.data.userData, details: groupDetails.data.data};
+      state.activeGroupDetails = {
+        userData: action.payload.currentUser,
+        ...action.payload.details,
+        members: action.payload.members
+      }
+    })
+    .addCase(getGroupDetails.rejected, (state, action) => {
+      throw action.error;
+    })
   },
 })
 
-export const chatActions = {...chat.actions, getAllMessages, getJoinedChats, searchUsers, createNewGroup};
+export const chatActions = {...chat.actions, getAllMessages, getJoinedChats, searchUsers, createNewGroup, getGroupDetails};
 
 export default chat.reducer
