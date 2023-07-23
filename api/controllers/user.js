@@ -32,16 +32,17 @@ const searchUser = async(req,res)=>{
     try{
         const searchName = req.query.searchName;
         const userId = req.userId;
+        let usersList
         if(!searchName){
-            return res.status(400).json({success: false, msg: "Please provide a search query!"})
+            usersList = await User.find()
+        } else{
+            usersList = await User.find({
+                username: {
+                  $regex: `${searchName}`,
+                  $options: "i",
+                },
+              });
         }
-
-        const usersList = await User.find({
-            username: {
-              $regex: `${searchName}`,
-              $options: "i",
-            },
-          });
 
         let data = usersList.map((obj)=>{return {_id: obj._id, username: obj.username,profilePic: obj.profilePic}})
         data = data.filter((obj)=>!obj._id.equals(userId))

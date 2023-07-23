@@ -13,6 +13,10 @@ const groupSchema = new Schema({
     groupProfilePic:{
         type:String,
         required:true,
+    },
+    isOneToOne:{
+        type: Boolean,
+        default: false
     }
 },{timestamps:true});
 

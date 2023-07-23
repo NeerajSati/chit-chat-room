@@ -13,6 +13,7 @@ const jwtAuthenticationMiddleware = (req,res,next) => {
     req.userName = decoded.username;
     next()
   } catch(err) {
+    console.log(err)
     return res.status(401).json({success: false, msg: "Invalid authorization token!"})
   }
 };

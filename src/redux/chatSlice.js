@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getJoinedChatsAPI, getGroupMessagesAPI, getSearchedUsersAPI, postNewGroupAPI, getGroupMembersAPI, getGroupDetailsAPI } from '../components/utils/api';
+import { getJoinedChatsAPI, getGroupMessagesAPI, getSearchedUsersAPI, postNewGroupAPI, postNewOneToOneChatAPI, getGroupMembersAPI, getGroupDetailsAPI } from '../components/utils/api';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import {socket} from '../components/utils/socket'
@@ -128,6 +128,32 @@ export const getGroupDetails = createAsyncThunk(
   }
 );
 
+export const createNewOneToOneChat = createAsyncThunk(
+  "chat/createOneToOneChat",
+  async (payload, thunkAPI) => {
+    const authToken = JSON.parse(localStorage.getItem('authToken'));
+    const {userId, userName} = payload
+    try {
+      const data = await axios.post(postNewOneToOneChatAPI(),{
+        friendId: userId, 
+        friendUsername: userName},{
+        headers: {
+          authorization: `Bearer ${authToken}`
+        },
+      });
+      toast.success("Chat has been created!")
+      return data.data;
+    } catch (err) {
+      if(err?.response?.data?.msg){
+        toast.error(err?.response?.data?.msg);
+      } else{
+        toast.error("Something went wrong");
+      }
+      throw err;
+    }
+  }
+);
+
 const initialState = {
   chats: [],
   chatMessagesMap: {},
@@ -236,7 +262,8 @@ export const chat = createSlice({
           groupName: chat.groupName,
           groupDescription: chat.groupDescription,
           groupProfilePic: chat.groupProfilePic,
-          groupCreatedAt: chat.groupCreatedAt
+          groupCreatedAt: chat.groupCreatedAt,
+          isOneToOneGroup: chat.isOneToOne
         }
       })
     })
@@ -277,6 +304,6 @@ export const chat = createSlice({
   },
 })
 
-export const chatActions = {...chat.actions, getAllMessages, getJoinedChats, searchUsers, createNewGroup, getGroupDetails};
+export const chatActions = {...chat.actions, getAllMessages, getJoinedChats, searchUsers, createNewGroup, getGroupDetails, createNewOneToOneChat};
 
 export default chat.reducer

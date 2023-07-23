@@ -3,6 +3,7 @@ import {AiOutlineUsergroupAdd} from 'react-icons/ai';
 import {SlOptionsVertical} from 'react-icons/sl';
 import {BiMessageSquareAdd, BiArrowBack} from 'react-icons/bi';
 import {FaSearch} from 'react-icons/fa';
+import {RiUserSearchFill} from 'react-icons/ri';
 import Chatlist from '../Chatlist/Chatlist';
 import {authActions} from '../../redux/authSlice';
 import {chatActions} from '../../redux/chatSlice'
@@ -10,6 +11,7 @@ import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import CreateGroup from '../CreateGroup/CreateGroup';
+import SearchUsers from '../SearchUsers/SearchUsers';
 
 function ChatNavigator({setDisplayLogoutPanel, displayLogoutPanel}) {
     const chatList = useSelector((state) => state.chat.chats);
@@ -17,6 +19,7 @@ function ChatNavigator({setDisplayLogoutPanel, displayLogoutPanel}) {
     const userProfileImg = useSelector((state) => state.auth.userProfileImg);
     const [selectedChats, setSelectedChats] = useState([]);
     const [viewCreateGroupModal, setViewCreateGroupModal] = useState(false);
+    const [viewSearchUserModal, setViewSearchUserModal] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -54,6 +57,7 @@ function ChatNavigator({setDisplayLogoutPanel, displayLogoutPanel}) {
                         </div>
                     </div>
                     <div className='h-[70px] flex items-center mr-2'>
+                        <RiUserSearchFill onClick={()=>{setViewSearchUserModal(true)}} className='text-[25px] mr-4 text-gray-300 cursor-pointer'/>
                         <AiOutlineUsergroupAdd onClick={()=>{setViewCreateGroupModal(true)}} className='text-[25px] mr-4 text-gray-300 cursor-pointer'/>
                         <div className='flex flex-col'>
                             <SlOptionsVertical onClick={(e)=>{e.stopPropagation(); setDisplayLogoutPanel(status=>!status)}} className='text-[20px] text-gray-300 cursor-pointer'/>
@@ -82,6 +86,13 @@ function ChatNavigator({setDisplayLogoutPanel, displayLogoutPanel}) {
             viewCreateGroupModal && (
                 <div onClick={()=>{setViewCreateGroupModal(false)}} className='fixed top-0 right-0 left-0 bottom-0 w-screen h-screen bg-[#173a2963] flex items-center justify-center'>
                 <CreateGroup setViewCreateGroupModal={setViewCreateGroupModal}/>
+            </div>
+                )
+            }
+            {
+            viewSearchUserModal && (
+                <div onClick={()=>{setViewSearchUserModal(false)}} className='fixed top-0 right-0 left-0 bottom-0 w-screen h-screen bg-[#173a2963] flex items-center justify-center'>
+                <SearchUsers setViewSearchUserModal={setViewSearchUserModal}/>
             </div>
                 )
             }

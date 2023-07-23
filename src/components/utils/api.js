@@ -23,6 +23,10 @@ export const postNewGroupAPI = () => {
   return `${baseUrl}/groups/create`;
 };
 
+export const postNewOneToOneChatAPI = () => {
+  return `${baseUrl}/groups/createSingle`;
+};
+
 export const getGroupDetailsAPI = (groupId) => {
   return `${baseUrl}/groups/details/${groupId}`;
 };

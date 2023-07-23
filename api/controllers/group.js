@@ -2,6 +2,7 @@ const {constants} = require("../utils/constants")
 const Group = require("../models/GroupSchema");
 const GroupMember = require("../models/GroupMemberSchema");
 const Message = require("../models/MessageSchema");
+const User = require("../models/UserSchema");
 const {uploadImage} = require("../utils/AzureUpload")
 const { v4: uuidv4 } = require('uuid');
 
@@ -92,7 +93,8 @@ const joinedGroups = async(req,res)=>{
                     groupName: group.groupId.groupName,
                     groupDescription: group.groupId.groupDescription,
                     groupProfilePic: group.groupId.groupProfilePic,
-                    groupCreatedAt: group.groupId.createdAt
+                    groupCreatedAt: group.groupId.createdAt,
+                    isOneToOne: group.groupId.isOneToOne
                 })
             } else{
                 groupsWithoutMessage.push({
@@ -102,7 +104,8 @@ const joinedGroups = async(req,res)=>{
                     groupName: group.groupId.groupName,
                     groupDescription: group.groupId.groupDescription,
                     groupProfilePic: group.groupId.groupProfilePic,
-                    groupCreatedAt: group.groupId.createdAt
+                    groupCreatedAt: group.groupId.createdAt,
+                    isOneToOne: group.groupId.isOneToOne
                 })
             }
         })
@@ -121,6 +124,18 @@ const joinedGroups = async(req,res)=>{
 
         // Merge groups with messages on top and empty groups in last
         groupsList.push(...groupsWithoutMessage)
+
+        for await (const group of groupsList) {
+            if(group.isOneToOne){
+                const groupDesc = group.groupDescription;
+                const friendId = groupDesc.split('_').find((id)=>id !== userId)
+                const friendDetails = await User.findById(friendId, 'username profilePic');
+                group.groupName = "@" + friendDetails.username;
+                group.groupDescription = ""
+                group.groupProfilePic = friendDetails.profilePic;
+                group.friendId = friendDetails._id;
+            }
+        }
 
         return res.status(200).json({success:true, msg:"Groups Fetched successfully!", data: groupsList})
     } catch(err){
@@ -225,6 +240,42 @@ const updateGroupAdmins = async(req,res)=>{
     }
 }
 
+const createChatValidate = async(req,res,next)=>{
+    const {friendId, friendUsername} = req.body;
+    if(!friendId || !friendUsername){
+        return res.status(400).json({success: false, msg: "Select a user!"});
+    }
+    next()
+}
+
+const createChat = async(req,res)=>{
+    try{
+        const userId = req.userId;
+        const userName = req.userName;
+        const {friendId, friendUsername} = req.body;
+
+        const groupName = `${userName}_${friendUsername}`;
+        const groupDescription = `${userId}_${friendId}`;
+        const groupProfilePic = "none"
+
+        const createGroup = new Group({
+            groupName, groupDescription, groupProfilePic, isOneToOne: true
+        })
+        const savedGroup = await createGroup.save();
+
+        // Add members to the created group
+        let memberIdArr = []
+        memberIdArr.push({userId, isAdmin: true, lastSeen:new Date(), groupId: savedGroup._id})
+        memberIdArr.push({userId: friendId, isAdmin: true, lastSeen:new Date(), groupId: savedGroup._id})
+        
+        await GroupMember.insertMany(memberIdArr)
+        return res.status(200).json({success:true, msg:"Group Created successfully!"})
+    } catch(err){
+        console.log("createGroup Error", err)
+        return res.status(400).json({success: false, msg: constants.genericError, error: err})
+    }
+}
+
 module.exports = {
     createGroupValidate,
     createGroup,
@@ -232,5 +283,7 @@ module.exports = {
     getGroupDetails,
     getGroupMembers,
     updateGroupDetails,
-    updateGroupAdmins
+    updateGroupAdmins,
+    createChat,
+    createChatValidate
 }

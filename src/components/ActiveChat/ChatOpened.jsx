@@ -97,10 +97,16 @@ function ChatOpened() {
       dispatch(chatActions.setChatBoxOpenState(false)) 
     }
 
+    const groupDetailExpandHandler = () => {
+      if(!activeChatDetails.isOneToOneGroup){
+        setViewGroupDetailsModal(true)
+      }
+    }
+
   return (
     <>
       <div className='bg-[#212326] w-full h-screen flex flex-col justify-between'>
-          <div onClick={()=>{setViewGroupDetailsModal(true)}} className='w-full bg-gradient-to-r from-[#00070b60] to-[#00325660] bg-[#111213] h-[90px] cursor-pointer flex justify-between items-center'>
+          <div onClick={groupDetailExpandHandler} style={{cursor: activeChatDetails.isOneToOneGroup ? 'default' : 'pointer'}} className='w-full bg-gradient-to-r from-[#00070b60] to-[#00325660] bg-[#111213] h-[90px] flex justify-between items-center'>
             <div className='ml-2 flex flex-row items-center'>
               {
                 screenWidth < 768 && (
@@ -119,7 +125,7 @@ function ChatOpened() {
                   <div className='text-[12px] font-semibold text-[#888888]'>{activeChatDetails.groupDescription}</div>
               </div>
             </div>
-            <div className='h-[70px] flex items-center mr-5'>
+            <div style={{display: activeChatDetails.isOneToOneGroup ? 'none' : 'flex'}} className='h-[70px] flex items-center mr-5'>
               <AiOutlineInfoCircle className='text-[20px] text-gray-200 cursor-pointer'/>
             </div>
           </div>
