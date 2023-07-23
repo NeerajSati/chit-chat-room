@@ -269,7 +269,7 @@ const createChat = async(req,res)=>{
         memberIdArr.push({userId: friendId, isAdmin: true, lastSeen:new Date(), groupId: savedGroup._id})
         
         await GroupMember.insertMany(memberIdArr)
-        return res.status(200).json({success:true, msg:"Group Created successfully!"})
+        return res.status(200).json({success:true, msg:"Group Created successfully!", groupId: savedGroup._id})
     } catch(err){
         console.log("createGroup Error", err)
         return res.status(400).json({success: false, msg: constants.genericError, error: err})

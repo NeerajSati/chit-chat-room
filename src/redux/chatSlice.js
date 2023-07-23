@@ -134,15 +134,15 @@ export const createNewOneToOneChat = createAsyncThunk(
     const authToken = JSON.parse(localStorage.getItem('authToken'));
     const {userId, userName} = payload
     try {
-      const data = await axios.post(postNewOneToOneChatAPI(),{
+      const createGroupResponse = await axios.post(postNewOneToOneChatAPI(),{
         friendId: userId, 
         friendUsername: userName},{
         headers: {
           authorization: `Bearer ${authToken}`
         },
       });
-      toast.success("Chat has been created!")
-      return data.data;
+      toast.success("Chat has been started!")
+      return createGroupResponse.data.groupId;
     } catch (err) {
       if(err?.response?.data?.msg){
         toast.error(err?.response?.data?.msg);
@@ -165,22 +165,24 @@ const initialState = {
   activeGroupDetails: {},
 };
 
+const handleUpdateActiveChatId = (state,action) => {
+  state.activeChatId = action.payload;
+  const chatIdx = state.chats.findLastIndex((chat)=>chat.groupId === state.activeChatId)
+  if(chatIdx >= 0 && state.chats[chatIdx].unseenMessages > 0){
+    state.chats[chatIdx].unseenMessages = 0;
+    const authToken = JSON.parse(localStorage.getItem('authToken'));
+    socket.emit("message_read_ack",{
+      "groupId": state.activeChatId,
+      "auth": authToken
+    })
+  }
+}
+
 export const chat = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    updateActiveChatId: (state, action) => {
-      state.activeChatId = action.payload;
-      const chatIdx = state.chats.findLastIndex((chat)=>chat.groupId === state.activeChatId)
-      if(chatIdx >= 0 && state.chats[chatIdx].unseenMessages > 0){
-        state.chats[chatIdx].unseenMessages = 0;
-        const authToken = JSON.parse(localStorage.getItem('authToken'));
-        socket.emit("message_read_ack",{
-          "groupId": state.activeChatId,
-          "auth": authToken
-        })
-      }
-    },
+    updateActiveChatId: handleUpdateActiveChatId,
     sendMessagePending: (state, action) => {
       const {message,temporaryId} = action.payload;
       state.chatMessagesMap[state.activeChatId].push({
@@ -291,7 +293,6 @@ export const chat = createSlice({
       throw action.error;
     })
     .addCase(getGroupDetails.fulfilled, (state, action) => {
-      // {members: groupMembers.data.data, currentUser: groupMembers.data.userData, details: groupDetails.data.data};
       state.activeGroupDetails = {
         userData: action.payload.currentUser,
         ...action.payload.details,
@@ -299,6 +300,13 @@ export const chat = createSlice({
       }
     })
     .addCase(getGroupDetails.rejected, (state, action) => {
+      throw action.error;
+    })
+    .addCase(createNewOneToOneChat.fulfilled, (state, action) => {
+      handleUpdateActiveChatId(state, action);
+      state.isChatBoxOpen = true;
+    })
+    .addCase(createNewOneToOneChat.rejected, (state, action) => {
       throw action.error;
     })
   },

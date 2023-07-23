@@ -10,6 +10,7 @@ import {RxCross2} from 'react-icons/rx'
 function SearchUsers({setViewSearchUserModal}) {
     const [searchUsername, setSearchUsername] = useState("");
     const searchedUsers = useSelector((state) => state.chat.searchedUsers);
+    const allChats = useSelector((state) => state.chat.chats);
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -21,9 +22,16 @@ function SearchUsers({setViewSearchUserModal}) {
     }
 
     const chatWithUserHandler = async(userId, userName) =>{
-        await dispatch(chatActions.createNewOneToOneChat({userId, userName}))
-        await dispatch(chatActions.getJoinedChats())
-        setViewSearchUserModal(false)
+        let existingOneToOneChat = allChats.find((chat)=>chat.friendId === userId);
+        if(allChats && existingOneToOneChat){
+            dispatch(chatActions.updateActiveChatId(existingOneToOneChat.groupId))
+            dispatch(chatActions.setChatBoxOpenState(true))
+            setViewSearchUserModal(false)
+        } else{
+            await dispatch(chatActions.createNewOneToOneChat({userId, userName}))
+            await dispatch(chatActions.getJoinedChats())
+            setViewSearchUserModal(false)
+        }
     }
 
   return (
