@@ -14,6 +14,7 @@ import CreateGroup from '../CreateGroup/CreateGroup';
 function Dashboard() {
   const chatList = useSelector((state) => state.chat.chats);
   const authToken = useSelector((state) => state.auth.authToken);
+  const userProfileImg = useSelector((state) => state.auth.userProfileImg);
   const activeChatId = useSelector((state) => state.chat.activeChatId);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
@@ -71,7 +72,7 @@ function Dashboard() {
               <img alt="profileImage" 
               className='w-full h-full rounded-full' 
               onError={(e)=>{e.target.onerror = null; e.target.src=process.env.REACT_APP_FALLBACK_IMAGE}}
-              src="https://images.pexels.com/photos/17102422/pexels-photo-17102422/free-photo-of-wood-landscape-water-summer.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              src={userProfileImg}
               ></img>  
               <div className='absolute bottom-[-8px] right-[-8px] w-5 h-5 bg-green-400 flex items-center justify-center rounded-lg'>
                 <BiMessageSquareAdd/>
@@ -92,7 +93,7 @@ function Dashboard() {
               <input placeholder='Search my chats' value={searchTerm} onChange={(e)=>{setSearchTerm(e.target.value)}} className='bg-[#18191b] outline-none w-full ml-4'/>
             </div>
           </div>
-          <div className='overflow-y-scroll'>
+          <div className='overflow-y-auto'>
             <Chatlist chatList={selectedChats}/>
           </div>
         </div>
@@ -103,7 +104,7 @@ function Dashboard() {
         {
           viewCreateGroupModal && (
             <div onClick={()=>{setViewCreateGroupModal(false)}} className='fixed top-0 right-0 left-0 bottom-0 w-screen h-screen bg-[#173a2963] flex items-center justify-center'>
-              <CreateGroup />
+              <CreateGroup setViewCreateGroupModal={setViewCreateGroupModal}/>
           </div>
         )
       }

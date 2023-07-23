@@ -6,8 +6,9 @@ import { toast } from 'react-toastify';
 import {chatActions} from '../../redux/chatSlice'
 import { useDispatch, useSelector } from 'react-redux'
 
-function CreateGroup() {
-    const [uploadedFile,setUploadedFile] = useState("")
+function CreateGroup({setViewCreateGroupModal}) {
+    const [uploadedImageUrl,setUploadedImageUrl] = useState("")
+    const [uploadedImage,setUploadedImage] = useState("")
     const [groupName, setGroupName] = useState("");
     const [groupDescription, setGroupDescription] = useState("");
     const [searchUsername, setSearchUsername] = useState("");
@@ -18,7 +19,8 @@ function CreateGroup() {
 
     const imageUploadHandler = (e) => {
         if(e.target.files[0]){
-            setUploadedFile(URL.createObjectURL(e.target.files[0]))
+            setUploadedImageUrl(URL.createObjectURL(e.target.files[0]))
+            setUploadedImage(e.target.files[0])
         }
     }
 
@@ -58,17 +60,25 @@ function CreateGroup() {
             toast.error('Select at least one member!',{autoClose: 2000, theme: "dark"});
             return true;
         }
-        if(!uploadedFile){
+        if(!uploadedImage){
             toast.error('Select upload profile Image!',{autoClose: 2000, theme: "dark"});
             return true;
         }
     }
 
-    const createGroupHandler = () =>{
+    const createGroupHandler = async () =>{
         if(validateGroupData()){
             return;
         }
-        console.log(selectedMembersList, groupName, uploadedFile)
+        console.log(selectedMembersList,JSON.stringify(selectedMembersList), groupName, groupDescription, uploadedImage)
+        const formContent = new FormData();
+        formContent.append("memberIds",JSON.stringify(selectedMembersList))
+        formContent.append("groupName",groupName)
+        formContent.append("groupDescription",groupDescription)
+        formContent.append("groupProfilePic",uploadedImage)
+        await dispatch(chatActions.createNewGroup({formContent}))
+        await dispatch(chatActions.getJoinedChats())
+        setViewCreateGroupModal(false)
     }
 
   return (
@@ -77,11 +87,11 @@ function CreateGroup() {
         <div className='grid grid-cols-6'>
             <div className='col-start-1 col-end-3 flex items-center justify-center'>
                 {
-                    uploadedFile ? (<img alt="profileImage" 
+                    uploadedImageUrl ? (<img alt="profileImage" 
                     onClick={()=>{inputFile.current.click();}}
                     className='cursor-pointer rounded-full border-2 border-gray-500 w-[150px] h-[150px] max-md:w-[90px] max-md:h-[90px]' 
                     onError={(e)=>{e.target.onerror = null; e.target.src=process.env.REACT_APP_FALLBACK_IMAGE}}
-                    src={uploadedFile}
+                    src={uploadedImageUrl}
                     ></img>) : (
                         <div onClick={()=>{inputFile.current.click();}} className='cursor-pointer rounded-full w-[150px] h-[150px] max-md:w-[60px] max-md:h-[60px] bg-gray-700 flex items-center justify-center text-white text-[100px]'>
                             <RiImageAddFill/>
@@ -123,7 +133,7 @@ function CreateGroup() {
                                     onClick={()=>{inputFile.current.click();}}
                                     className='rounded-full border-2 border-gray-500 w-[40px] h-[40px]' 
                                     onError={(e)=>{e.target.onerror = null; e.target.src=process.env.REACT_APP_FALLBACK_IMAGE}}
-                                    src={uploadedFile}
+                                    src={member.profilePic}
                                 ></img>
                                 <div className='pl-2 font-bold'>@{member.username}</div>
                             </div>

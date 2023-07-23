@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getGroupsJoined, getGroupMessages, getSearchedUsers } from '../components/utils/api';
+import { getGroupsJoined, getGroupMessages, getSearchedUsers, postNewGroup } from '../components/utils/api';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import {socket} from '../components/utils/socket'
@@ -62,6 +62,31 @@ export const getAllMessages = createAsyncThunk(
         }
       });
       return {messages: groupMessages.data.data, groupId};
+    } catch (err) {
+      if(err?.response?.data?.msg){
+        toast.error(err?.response?.data?.msg);
+      } else{
+        toast.error("Something went wrong");
+      }
+      throw err;
+    }
+  }
+);
+
+export const createNewGroup = createAsyncThunk(
+  "chat/createNewGroup",
+  async (payload, thunkAPI) => {
+    const authToken = JSON.parse(localStorage.getItem('authToken'));
+    const {formContent} = payload
+    try {
+      const data = await axios.post(postNewGroup(),formContent, {
+        headers: {
+          authorization: `Bearer ${authToken}`,
+          "content-type": "multipart/form-data",
+        }
+      });
+      toast.success("Group has been created!")
+      return data.data;
     } catch (err) {
       if(err?.response?.data?.msg){
         toast.error(err?.response?.data?.msg);
@@ -194,9 +219,14 @@ export const chat = createSlice({
     .addCase(searchUsers.rejected, (state, action) => {
       throw action.error;
     })
+    .addCase(createNewGroup.fulfilled, (state, action) => {
+    })
+    .addCase(createNewGroup.rejected, (state, action) => {
+      throw action.error;
+    })
   },
 })
 
-export const chatActions = {...chat.actions, getAllMessages, getJoinedChats, searchUsers};
+export const chatActions = {...chat.actions, getAllMessages, getJoinedChats, searchUsers, createNewGroup};
 
 export default chat.reducer

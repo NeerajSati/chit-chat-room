@@ -10,9 +10,15 @@ export const loginAPI = () => {
 export const getGroupsJoined = () => {
   return `${baseUrl}/groups/joined`;
 };
+
 export const getGroupMessages = (groupId) => {
   return `${baseUrl}/messages/all/${groupId}`;
 };
+
 export const getSearchedUsers = () => {
   return `${baseUrl}/user/search`;
+};
+
+export const postNewGroup = () => {
+  return `${baseUrl}/groups/create`;
 };

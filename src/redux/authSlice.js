@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { loginAPI, registerAPI } from '../components/utils/api';
 import axios from 'axios'
 import { toast } from 'react-toastify';
+import jwt_decode from "jwt-decode";
 
 export const loginUser = createAsyncThunk(
   "auth/login",
@@ -52,6 +53,7 @@ export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     authToken: "",
+    userProfileImg: "",
     status: "IDLE"
   },
   reducers: {
@@ -63,6 +65,13 @@ export const authSlice = createSlice({
     .addCase(loginUser.fulfilled, (state, action) => {
       state.authToken = action.payload.token;
       localStorage.setItem('authToken', JSON.stringify(action.payload.token));
+      try{
+        const decoded = jwt_decode(action.payload.token);
+        if(decoded.profilePic)
+          state.userProfileImg = decoded.profilePic
+      } catch(err){
+        console.log("Cannot decode JWT!")
+      }
     })
     .addCase(loginUser.rejected, (state, action) => {
       throw action.error;
@@ -72,6 +81,13 @@ export const authSlice = createSlice({
     .addCase(registerUser.fulfilled, (state, action) => {
       state.authToken = action.payload.token;
       localStorage.setItem('authToken', JSON.stringify(action.payload.token));
+      try{
+        const decoded = jwt_decode(action.payload.token);
+        if(decoded.profilePic)
+          state.userProfileImg = decoded.profilePic
+      } catch(err){
+        console.log("Cannot decode JWT!")
+      }
     })
     .addCase(registerUser.rejected, (state, action) => {
       throw action.error;
