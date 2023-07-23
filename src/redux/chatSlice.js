@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getGroupsJoined, getGroupMessages } from '../components/utils/api';
+import { getGroupsJoined, getGroupMessages, getSearchedUsers } from '../components/utils/api';
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import {socket} from '../components/utils/socket'
@@ -15,6 +15,30 @@ export const getJoinedChats = createAsyncThunk(
           }
         });
         return joinedGroups.data;
+      } catch (err) {
+        if(err?.response?.data?.msg){
+          toast.error(err?.response?.data?.msg);
+        } else{
+          toast.error("Something went wrong");
+        }
+        throw err;
+      }
+  }
+);
+
+export const searchUsers = createAsyncThunk(
+  "chat/searchUsers",
+  async (payload, thunkAPI) => {
+      const authToken = JSON.parse(localStorage.getItem('authToken'));
+      try {
+        const {searchUsername} = payload;
+        const userList = await axios.get(getSearchedUsers(), {
+          headers: {
+            authorization: `Bearer ${authToken}`,
+          },
+          params: { searchName: searchUsername }
+        });
+        return userList.data;
       } catch (err) {
         if(err?.response?.data?.msg){
           toast.error(err?.response?.data?.msg);
@@ -56,7 +80,8 @@ export const chat = createSlice({
     chatMessagesMap: {},
     chatDetailsMap: {},
     newChatMessagesIdx: {},
-    activeChatId: ""
+    activeChatId: "",
+    searchedUsers: []
   },
   reducers: {
     updateActiveChatId: (state, action) => {
@@ -163,9 +188,15 @@ export const chat = createSlice({
     .addCase(getAllMessages.rejected, (state, action) => {
       throw action.error;
     })
+    .addCase(searchUsers.fulfilled, (state, action) => {
+      state.searchedUsers = action.payload.data;
+    })
+    .addCase(searchUsers.rejected, (state, action) => {
+      throw action.error;
+    })
   },
 })
 
-export const chatActions = {...chat.actions, getAllMessages, getJoinedChats};
+export const chatActions = {...chat.actions, getAllMessages, getJoinedChats, searchUsers};
 
 export default chat.reducer

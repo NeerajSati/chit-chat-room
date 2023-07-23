@@ -3,15 +3,18 @@ import {RiImageAddFill} from 'react-icons/ri'
 import {FaSearch} from 'react-icons/fa';
 import {MdOutlineRemoveCircle} from 'react-icons/md';
 import { toast } from 'react-toastify';
+import {chatActions} from '../../redux/chatSlice'
+import { useDispatch, useSelector } from 'react-redux'
 
 function CreateGroup() {
     const [uploadedFile,setUploadedFile] = useState("")
     const [groupName, setGroupName] = useState("");
     const [groupDescription, setGroupDescription] = useState("");
     const [searchUsername, setSearchUsername] = useState("");
+    const searchedUsers = useSelector((state) => state.chat.searchedUsers);
     const [selectedMembersList, setSelectedMembersList] = useState([])
-    const [searchedMembersList, setSearchedMembersList] = useState([]);
     const inputFile = useRef();
+    const dispatch = useDispatch();
 
     const imageUploadHandler = (e) => {
         if(e.target.files[0]){
@@ -19,9 +22,10 @@ function CreateGroup() {
         }
     }
 
-    const searchUsernameHandler = () =>{
+    const searchUsernameHandler = async() =>{
         if(searchUsername){
-
+            console.log("hdhdhd",searchUsername)
+            await dispatch(chatActions.searchUsers({searchUsername}))
         }
     }
 
@@ -109,7 +113,7 @@ function CreateGroup() {
             </div>
             <div className='w-full bg-white rounded-md px-5 searchedMemberList max-h-[130px] overflow-y-auto'>
                 {
-                    searchedMembersList && searchedMembersList.map((member)=>{
+                    searchedUsers && searchedUsers.map((member)=>{
                         if(selectedMembersList.find((selected)=>selected.userId === member._id)){
                             return null;
                         }

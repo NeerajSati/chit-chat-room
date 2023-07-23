@@ -13,3 +13,6 @@ export const getGroupsJoined = () => {
 export const getGroupMessages = (groupId) => {
   return `${baseUrl}/messages/all/${groupId}`;
 };
+export const getSearchedUsers = () => {
+  return `${baseUrl}/user/search`;
+};
