@@ -31,6 +31,7 @@ const updateUser = async(req,res)=>{
 const searchUser = async(req,res)=>{
     try{
         const searchName = req.query.searchName;
+        const userId = req.userId;
         if(!searchName){
             return res.status(400).json({success: false, msg: "Please provide a search query!"})
         }
@@ -42,7 +43,8 @@ const searchUser = async(req,res)=>{
             },
           });
 
-        const data = usersList.map((obj)=>{return {_id: obj._id, username: obj.username,profilePic: obj.profilePic}})
+        let data = usersList.map((obj)=>{return {_id: obj._id, username: obj.username,profilePic: obj.profilePic}})
+        data = data.filter((obj)=>!obj._id.equals(userId))
 
         return res.status(200).json({success:true, msg:"Users fetched successfully!", data:data})
     } catch(err){
