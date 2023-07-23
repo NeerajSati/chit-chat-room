@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import {RiImageAddFill} from 'react-icons/ri'
 import {FaSearch} from 'react-icons/fa';
 import {MdOutlineRemoveCircle} from 'react-icons/md';
+import { toast } from 'react-toastify';
 
 function CreateGroup() {
     const [uploadedFile,setUploadedFile] = useState("")
@@ -38,6 +39,32 @@ function CreateGroup() {
                 return [...arr]
             });
         }
+    }
+
+    const validateGroupData = () =>{
+        if(!groupName){
+            toast.error('Group Name is required!',{autoClose: 2000, theme: "dark"});
+            return true;
+        }
+        if(!groupDescription){
+            toast.error('Group Description is required!',{autoClose: 2000, theme: "dark"});
+            return true;
+        }
+        if(!selectedMembersList || !selectedMembersList.length){
+            toast.error('Select at least one member!',{autoClose: 2000, theme: "dark"});
+            return true;
+        }
+        if(!uploadedFile){
+            toast.error('Select upload profile Image!',{autoClose: 2000, theme: "dark"});
+            return true;
+        }
+    }
+
+    const createGroupHandler = () =>{
+        if(validateGroupData()){
+            return;
+        }
+        console.log(selectedMembersList, groupName, uploadedFile)
     }
 
   return (
@@ -113,7 +140,7 @@ function CreateGroup() {
         <div className='px-5 searchedMemberList overflow-y-auto flex flex-row flex-wrap'>
             {
                 selectedMembersList && selectedMembersList.map((member)=>{
-                    return <div onClick={()=>{selectUserRemoveHandler(member.userId)}} style={{backgroundColor:member.isAdmin ? '#b4e1b4' : '#e2e3e397'}} className='cursor-pointer h-[35px] mr-2 border-2 border-gray-300 mt-2 rounded-sm px-1 flex flex-row items-center justify-center' key={member._id}>
+                    return <div onClick={()=>{selectUserRemoveHandler(member.userId)}} style={{backgroundColor:member.isAdmin ? '#b4e1b4' : '#e2e3e397'}} className='cursor-pointer h-[35px] mr-2 border-2 border-gray-300 mt-2 rounded-sm px-1 flex flex-row items-center justify-center' key={member.userId}>
                             <div className='font-semibold text-[14px]'>@{member.username}</div>
                             <button className='text-[#ce2727] mt-1 ml-2'><MdOutlineRemoveCircle/></button>
                     </div>
