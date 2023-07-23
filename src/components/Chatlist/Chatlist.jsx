@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import ListItem from './ListItem'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {chatActions} from '../../redux/chatSlice'
 
 function Chatlist({chatList}) {
@@ -9,6 +9,7 @@ function Chatlist({chatList}) {
   useEffect(()=>{
       if(activeChatId){
           dispatch(chatActions.updateActiveChatId(activeChatId))
+          dispatch(chatActions.setChatBoxOpenState(true))
       }
   },[activeChatId])
 

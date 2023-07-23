@@ -134,8 +134,9 @@ const initialState = {
   chatDetailsMap: {},
   newChatMessagesIdx: {},
   activeChatId: "",
+  isChatBoxOpen: false,
   searchedUsers: [],
-  activeGroupDetails: {}
+  activeGroupDetails: {},
 };
 
 export const chat = createSlice({
@@ -217,6 +218,10 @@ export const chat = createSlice({
           "auth": authToken
         })
       }
+    },
+    setChatBoxOpenState: (state, action) => {
+      const position = action.payload;
+      state.isChatBoxOpen = position;
     },
     resetStates: () => initialState,
   },

@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react'
 import {BiSend} from 'react-icons/bi'
 import Message from './Message'
-import {BiMessageSquareAdd} from 'react-icons/bi';
-import {AiOutlineUsergroupAdd, AiOutlineInfoCircle} from 'react-icons/ai';
+import {BiArrowBack} from 'react-icons/bi';
+import {AiOutlineInfoCircle} from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux'
 import {chatActions} from '../../redux/chatSlice'
 import {socket} from '../utils/socket'
@@ -12,6 +12,7 @@ function ChatOpened() {
     const [sendMessageQuery, setSendMessageQuery] = useState("");
     const [activeChatMessages, setActiveChatMessages] = useState([]);
     const [activeChatDetails, setActiveChatDetails] = useState({});
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth);
     const [viewGroupDetailsModal, setViewGroupDetailsModal] = useState(false);
     const messageListMap = useSelector((state) => state.chat.chatMessagesMap);
     const chatDetailsMap = useSelector((state) => state.chat.chatDetailsMap);
@@ -39,6 +40,17 @@ function ChatOpened() {
         setActiveChatDetails(chatDetailsMap[activeChatId]);
       }
     },[chatDetailsMap])
+
+    useEffect(() => {
+      window.addEventListener("resize", () => {
+        setScreenWidth(window.innerWidth);
+      });
+      return () => {
+        window.removeEventListener("resize", () => {
+          setScreenWidth(window.innerWidth);
+        });
+      };
+    }, []);
 
     const messageRef = useRef(null);
     useEffect(() => {
@@ -80,11 +92,23 @@ function ChatOpened() {
       }
     }
 
+    const backButtonHandler = (e) => {
+      e.stopPropagation();
+      dispatch(chatActions.setChatBoxOpenState(false)) 
+    }
+
   return (
     <>
       <div className='bg-[#212326] w-full h-screen flex flex-col justify-between'>
           <div onClick={()=>{setViewGroupDetailsModal(true)}} className='w-full bg-gradient-to-r from-[#00070b60] to-[#00325660] bg-[#111213] h-[90px] cursor-pointer flex justify-between items-center'>
             <div className='ml-2 flex flex-row items-center'>
+              {
+                screenWidth < 768 && (
+                  <div onClick={backButtonHandler} className='text-white text-[20px] pr-3 h-[50px] flex items-center'>
+                    <BiArrowBack/>
+                  </div>
+                )
+              }
               <img alt="profileImage" 
               className='w-[50px] h-[50px] rounded-full border-2' 
               onError={(e)=>{e.target.onerror = null; e.target.src=process.env.REACT_APP_FALLBACK_IMAGE}}

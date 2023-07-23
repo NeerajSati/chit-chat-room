@@ -8,6 +8,7 @@ function ActiveChat() {
     const activeChatId = useSelector((state) => state.chat.activeChatId);
   return (
     <>
+      <div className='flex-[6.5] bg-[#323338] w-full'>
         {
             !activeChatId && (
                 <div className='w-full h-full flex items-center justify-center flex-col text-slate-400 font-bold select-none'>
@@ -21,6 +22,7 @@ function ActiveChat() {
                 <ChatOpened/>
             )
         }
+      </div>
     </>
   )
 }
