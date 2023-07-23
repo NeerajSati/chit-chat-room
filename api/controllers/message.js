@@ -80,6 +80,7 @@ const sendMessageViaSocket = async(userId, groupId, message)=>{
         const savedMessage = await createMessage.save();
 
         const groupDetails = await Group.findById(groupId, 'groupName groupProfilePic');
+        GroupMember.findOneAndUpdate({userId, groupId},{lastSeen: new Date()}).exec();
 
         // return savedMessage;
         return {_id: savedMessage._id, message: savedMessage.message, createdAt: savedMessage.createdAt, groupName: groupDetails.groupName, groupProfilePic: groupDetails.groupProfilePic}
