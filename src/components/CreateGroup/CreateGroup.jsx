@@ -5,6 +5,7 @@ import {MdOutlineRemoveCircle} from 'react-icons/md';
 import { toast } from 'react-toastify';
 import {chatActions} from '../../redux/chatSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import {RxCross2} from 'react-icons/rx'
 
 function CreateGroup({setViewCreateGroupModal}) {
     const [uploadedImageUrl,setUploadedImageUrl] = useState("")
@@ -82,7 +83,7 @@ function CreateGroup({setViewCreateGroupModal}) {
     }
 
   return (
-    <div onClick={(e)=>{e.stopPropagation()}} className='py-2 px-2 w-[600px] max-h-[90vh] max-md:w-screen max-md:h-screen max-md:max-h-screen bg-[#ffffff] overflow-y-auto'>
+    <div onClick={(e)=>{e.stopPropagation()}} className='py-2 px-2 w-[600px] max-h-[90vh] max-md:w-screen max-md:h-screen max-md:max-h-screen bg-[#ffffff] overflow-y-auto relative'>
         <div className='py-2 pb-5 font-bold w-full text-center text-[20px]'>Create a group!</div>
         <div className='grid grid-cols-6'>
             <div className='col-start-1 col-end-3 flex items-center justify-center'>
@@ -165,6 +166,7 @@ function CreateGroup({setViewCreateGroupModal}) {
             <button onClick={createGroupHandler} className='bg-[#09794A] text-white px-4 py-1 rounded-md'>Create Group</button>
         </div>
         <input type='file' id='file' accept='image/*' ref={inputFile} onChange={imageUploadHandler} style={{display: 'none'}}/>
+        <div onClick={()=>{setViewCreateGroupModal(false)}} className='absolute top-[20px] right-[20px] text-[25px] cursor-pointer text-[#861a1a]'><RxCross2/></div>
     </div>
   )
 }
