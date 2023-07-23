@@ -3,6 +3,7 @@ const User = require("../models/UserSchema");
 const jwtVerify = require("../utils/jwtVerify");
 const bcrypt = require('bcrypt');
 const {uploadImage} = require("../utils/AzureUpload")
+const GroupMember = require("../models/GroupMemberSchema");
 const salt = bcrypt.genSaltSync(10);
 
 const registerUserValidate = async(req,res,next)=>{
@@ -53,6 +54,12 @@ const registerUser = async(req,res)=>{
         })
         let savedUser = await newUser.save();
         savedUser.password = undefined
+
+        //join default groups
+        let joinedGroups= []
+        joinedGroups.push({userId: savedUser._id, isAdmin: false, lastSeen:new Date(), groupId: "64bce84d09e7d36dd89aaa4c"})
+        await GroupMember.insertMany(joinedGroups)
+
         return res.status(200).json({success:true, token:jwtVerify.generateToken(savedUser)})
     } catch(err){
         console.log("registerUser Error", err)
