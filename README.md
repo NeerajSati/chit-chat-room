@@ -21,3 +21,6 @@ Create group screen:
 
 Group details screen:
 ![image](https://github.com/NeerajSati/chit-chat-room/assets/63944649/3a0f7bd6-02d5-4f62-ab2f-dd1058c827bf)
+
+Search users to connect:
+![image](https://github.com/NeerajSati/chit-chat-room/assets/63944649/c37715c7-e49f-4228-9ddb-59265ad2a05d)
