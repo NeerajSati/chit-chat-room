@@ -1,8 +1,8 @@
-![image](https://github.com/NeerajSati/chit-chat-room/assets/63944649/e767fadc-4a62-4a9a-8218-248a31e24840)A realtime chat app made with web sockets.
-Allowing to create New groups and add new people.
-Make people admin of groups.
-Using azure blob storage for storing Profile Image.
-Track last activity time of users.
+## A realtime chat app made with web sockets.
+### Allowing to create New groups and add new people.
+### Make people admin of groups.
+### Using azure blob storage for storing Profile Image.
+### Track last activity time of users.
 
 Chat Screen:
 ![image](https://github.com/NeerajSati/chit-chat-room/assets/63944649/2c04abc0-b72c-438a-a3a2-aec7fbbd223d)
