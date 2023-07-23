@@ -131,7 +131,6 @@ function CreateGroup({setViewCreateGroupModal}) {
                         return <div className='w-full h-[45px] bg-[#e2e3e397] border-2 border-gray-300 mt-2 rounded-sm px-2 flex flex-row items-center justify-between' key={member._id}>
                             <div className='flex flex-row items-center justify-center'>
                                 <img alt="profileImage" 
-                                    onClick={()=>{inputFile.current.click();}}
                                     className='rounded-full border-2 border-gray-500 w-[40px] h-[40px]' 
                                     onError={(e)=>{e.target.onerror = null; e.target.src=process.env.REACT_APP_FALLBACK_IMAGE}}
                                     src={member.profilePic}
