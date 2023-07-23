@@ -98,16 +98,18 @@ export const createNewGroup = createAsyncThunk(
   }
 );
 
+const initialState = {
+  chats: [],
+  chatMessagesMap: {},
+  chatDetailsMap: {},
+  newChatMessagesIdx: {},
+  activeChatId: "",
+  searchedUsers: []
+};
+
 export const chat = createSlice({
   name: 'chat',
-  initialState: {
-    chats: [],
-    chatMessagesMap: {},
-    chatDetailsMap: {},
-    newChatMessagesIdx: {},
-    activeChatId: "",
-    searchedUsers: []
-  },
+  initialState,
   reducers: {
     updateActiveChatId: (state, action) => {
       state.activeChatId = action.payload;
@@ -185,6 +187,7 @@ export const chat = createSlice({
         })
       }
     },
+    resetStates: () => initialState,
   },
   extraReducers: (builder) => {
     builder

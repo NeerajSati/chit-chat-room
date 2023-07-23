@@ -8,7 +8,9 @@ import Chatlist from '../Chatlist/Chatlist';
 import ActiveChat from '../ActiveChat/ActiveChat';
 import { useDispatch, useSelector } from 'react-redux'
 import {chatActions} from '../../redux/chatSlice'
+import {authActions} from '../../redux/authSlice';
 import {socket} from '../utils/socket'
+import { toast } from 'react-toastify';
 import CreateGroup from '../CreateGroup/CreateGroup';
 
 function Dashboard() {
@@ -18,6 +20,7 @@ function Dashboard() {
   const activeChatId = useSelector((state) => state.chat.activeChatId);
   const dispatch = useDispatch();
   const [searchTerm, setSearchTerm] = useState("");
+  const [displayLogoutPanel, setDisplayLogoutPanel] = useState(false);
   const [selectedChats, setSelectedChats] = useState([]);
   const [viewCreateGroupModal, setViewCreateGroupModal] = useState(false);
   const navigate = useNavigate();
@@ -62,10 +65,18 @@ function Dashboard() {
   const messageReceivedHandler = async(data) =>{
     await dispatch(chatActions.receiveNewMessage(data))
   }
+  const logoutHandler = async() =>{
+    setDisplayLogoutPanel(false)
+    localStorage.removeItem("authToken");
+    await dispatch(authActions.resetStates())
+    await dispatch(chatActions.resetStates())
+    toast.success("You have been logged out!")
+    navigate('/');
+  }
 
   return (
     <>
-      <div className='flex flex-row w-full h-screen'>
+      <div className='flex flex-row w-full h-screen select-none'>
         <div className='flex-[3.5] bg-[#2B2D31] w-full flex flex-col'>
           <div className='h-[70px] w-full bg-[#111213] flex items-center justify-between'>
             <div className='w-[50px] h-[50px] ml-2 relative cursor-pointer max-md:w-[40px] max-md:h-[40px]'>
@@ -80,7 +91,12 @@ function Dashboard() {
             </div>
             <div className='h-[70px] flex items-center mr-2'>
               <AiOutlineUsergroupAdd onClick={()=>{setViewCreateGroupModal(true)}} className='text-[25px] mr-4 text-gray-300 cursor-pointer'/>
-              <SlOptionsVertical className='text-[20px] text-gray-300 cursor-pointer'/>
+              <div className='flex flex-col'>
+              <SlOptionsVertical onClick={()=>{setDisplayLogoutPanel(status=>!status)}} className='text-[20px] text-gray-300 cursor-pointer'/>
+              {
+                displayLogoutPanel && <div onClick={logoutHandler} className='w-[90px] bg-[#ffffff] float-left fixed top-[55px] rounded-sm text-center font-semibold text-[14px] py-1 cursor-pointer select-none'>Logout</div>
+              }
+              </div>
             </div>
           </div>
           <div className='py-3 flex items-center justify-center'>

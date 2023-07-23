@@ -3,7 +3,7 @@ import {RxCross2} from 'react-icons/rx'
 import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import {registerUser} from '../../redux/authSlice';
+import {authActions} from '../../redux/authSlice';
 import { toast } from 'react-toastify';
 
 function Register({switchPage}) {
@@ -46,7 +46,7 @@ function Register({switchPage}) {
             formContent.append("email",email)
             formContent.append("username",username)
             formContent.append("password",password)
-            await dispatch(registerUser({formContent}))
+            await dispatch(authActions.registerUser({formContent}))
             navigate('/chat')
             setDisableAuthActions(false);
         } catch(err){

@@ -2,10 +2,10 @@ import React, {useState} from 'react'
 import {RxCross2} from 'react-icons/rx'
 import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
 import { Link, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {loginUser} from '../../redux/authSlice'
+import {authActions} from '../../redux/authSlice';
 
 function Login({switchPage}) {
     const [showPassword, setShowPassword] = useState(false);
@@ -38,7 +38,7 @@ function Login({switchPage}) {
                 return;
             }
             setDisableAuthActions(true);
-            await dispatch(loginUser({email,password}))
+            await dispatch(authActions.loginUser({email,password}))
             toast.success("Successfully Logged in!")
             navigate('/chat')
             setDisableAuthActions(false);
@@ -51,7 +51,7 @@ function Login({switchPage}) {
     const loginUserAsGuest = async() => {
         try{
             setDisableAuthActions(true);
-            await dispatch(loginUser({email : process.env.REACT_APP_GUEST_EMAIL,password: process.env.REACT_APP_GUEST_PASSWORD}))
+            await dispatch(authActions.loginUser({email : process.env.REACT_APP_GUEST_EMAIL,password: process.env.REACT_APP_GUEST_PASSWORD}))
             toast.success("Successfully Logged in!")
             navigate('/chat')
             setDisableAuthActions(false);
