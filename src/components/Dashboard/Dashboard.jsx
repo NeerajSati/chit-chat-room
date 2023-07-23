@@ -65,7 +65,7 @@ function Dashboard() {
   const messageReceivedHandler = async(data) =>{
     await dispatch(chatActions.receiveNewMessage(data))
   }
-  const logoutHandler = async() =>{
+  const logoutHandler = async(e) =>{
     setDisplayLogoutPanel(false)
     localStorage.removeItem("authToken");
     await dispatch(authActions.resetStates())
@@ -76,7 +76,7 @@ function Dashboard() {
 
   return (
     <>
-      <div className='flex flex-row w-full h-screen select-none'>
+      <div className='flex flex-row w-full h-screen select-none' onClick={()=>{setDisplayLogoutPanel(false)}}>
         <div className='flex-[3.5] bg-[#2B2D31] w-full flex flex-col'>
           <div className='h-[70px] w-full bg-[#111213] flex items-center justify-between'>
             <div className='w-[50px] h-[50px] ml-2 relative cursor-pointer max-md:w-[40px] max-md:h-[40px]'>
@@ -92,7 +92,7 @@ function Dashboard() {
             <div className='h-[70px] flex items-center mr-2'>
               <AiOutlineUsergroupAdd onClick={()=>{setViewCreateGroupModal(true)}} className='text-[25px] mr-4 text-gray-300 cursor-pointer'/>
               <div className='flex flex-col'>
-              <SlOptionsVertical onClick={()=>{setDisplayLogoutPanel(status=>!status)}} className='text-[20px] text-gray-300 cursor-pointer'/>
+              <SlOptionsVertical onClick={(e)=>{e.stopPropagation(); setDisplayLogoutPanel(status=>!status)}} className='text-[20px] text-gray-300 cursor-pointer'/>
               {
                 displayLogoutPanel && <div onClick={logoutHandler} className='w-[90px] bg-[#ffffff] float-left fixed top-[55px] rounded-sm text-center font-semibold text-[14px] py-1 cursor-pointer select-none'>Logout</div>
               }
