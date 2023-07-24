@@ -20,6 +20,7 @@ function Dashboard() {
     if(!authToken){
         navigate('/')
     } else{
+      dispatch(chatActions.setGroupListLoading(true))
       dispatch(chatActions.getJoinedChats())
     }
     window.addEventListener("resize", () => {

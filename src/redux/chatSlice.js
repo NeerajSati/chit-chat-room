@@ -163,6 +163,7 @@ const initialState = {
   isChatBoxOpen: false,
   searchedUsers: [],
   activeGroupDetails: {},
+  isGroupListLoading: false
 };
 
 const handleUpdateActiveChatId = (state,action) => {
@@ -251,6 +252,9 @@ export const chat = createSlice({
       const position = action.payload;
       state.isChatBoxOpen = position;
     },
+    setGroupListLoading: (state, action) => {
+      state.isGroupListLoading = action.payload;
+    },
     resetStates: () => initialState,
   },
   extraReducers: (builder) => {
@@ -268,6 +272,7 @@ export const chat = createSlice({
           isOneToOneGroup: chat.isOneToOne
         }
       })
+      state.isGroupListLoading = false;
     })
     .addCase(getJoinedChats.rejected, (state, action) => {
       throw action.error;
