@@ -275,7 +275,7 @@ export const chat = createSlice({
       state.isGroupListLoading = false;
     })
     .addCase(getJoinedChats.rejected, (state, action) => {
-      throw action.error;
+      console.log("Error occured",action.error)
     })
     .addCase(getAllMessages.pending, (state, action) => {
     })
@@ -284,18 +284,18 @@ export const chat = createSlice({
       state.newChatMessagesIdx[action.payload.groupId] = action.payload.messages.newMessagesIdx;
     })
     .addCase(getAllMessages.rejected, (state, action) => {
-      throw action.error;
+      console.log("Error occured",action.error)
     })
     .addCase(searchUsers.fulfilled, (state, action) => {
       state.searchedUsers = action.payload.data;
     })
     .addCase(searchUsers.rejected, (state, action) => {
-      throw action.error;
+      console.log("Error occured",action.error)
     })
     .addCase(createNewGroup.fulfilled, (state, action) => {
     })
     .addCase(createNewGroup.rejected, (state, action) => {
-      throw action.error;
+      console.log("Error occured",action.error)
     })
     .addCase(getGroupDetails.fulfilled, (state, action) => {
       state.activeGroupDetails = {
@@ -305,14 +305,14 @@ export const chat = createSlice({
       }
     })
     .addCase(getGroupDetails.rejected, (state, action) => {
-      throw action.error;
+      console.log("Error occured",action.error)
     })
     .addCase(createNewOneToOneChat.fulfilled, (state, action) => {
       handleUpdateActiveChatId(state, action);
       state.isChatBoxOpen = true;
     })
     .addCase(createNewOneToOneChat.rejected, (state, action) => {
-      throw action.error;
+      console.log("Error occured",action.error)
     })
   },
 })

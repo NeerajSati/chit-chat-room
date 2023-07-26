@@ -7,9 +7,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import {chatActions} from '../../redux/chatSlice'
 import {socket} from '../utils/socket'
 import GroupDetails from '../GroupDetails/GroupDetails';
+import MessageLoading from './MessageLoading';
 
 function ChatOpened() {
     const [sendMessageQuery, setSendMessageQuery] = useState("");
+    const [activeChatLoading, setActiveChatLoading] = useState(false);
     const [activeChatMessages, setActiveChatMessages] = useState([]);
     const [activeChatDetails, setActiveChatDetails] = useState({});
     const [screenWidth, setScreenWidth] = useState(window.innerWidth);
@@ -64,6 +66,7 @@ function ChatOpened() {
         if(Object.keys(messageListMap).includes(activeChatId)){
           setActiveChatMessages(messageListMap[activeChatId]);
         } else{
+          setActiveChatLoading(true)
           try {
             await dispatch(
               chatActions.getAllMessages({ groupId: activeChatId })
@@ -71,6 +74,7 @@ function ChatOpened() {
           } catch (e) {
             console.log(e);
           }
+          setActiveChatLoading(false)
         }
     }
 
@@ -130,15 +134,21 @@ function ChatOpened() {
             </div>
           </div>
           <div ref={messageRef} className='h-full overflow-y-scroll'>
-              {activeChatMessages && activeChatMessages.length ? (
-                  activeChatMessages.map((message)=>{
-                      return <Message messageContent={message} key={message._id}/>
-                  })
-              ) : (
-                  <div className='w-full h-full flex items-center justify-center flex-col text-gray-400 font-bold select-none'>
-                    No Messages Yet!
-                  </div>
-              )}
+              {
+                activeChatLoading ? 
+                ([...Array(10).keys()].map(((key)=>{
+                    return (
+                      <MessageLoading key = {key}/>
+                    )
+                }))) : ( 
+                  (activeChatMessages && activeChatMessages.length) ? (activeChatMessages.map((message)=>{
+                    return <Message messageContent={message} key={message._id}/>
+                  })) : (
+                    <div className='w-full h-full flex items-center justify-center flex-col text-gray-400 font-bold select-none'>
+                      No Messages Yet!
+                    </div>)  
+                )
+              }
           </div>
           <div className='bg-[#202C33] h-[90px] w-full flex items-center justify-center'>
               <div className='bg-[#505257] w-[90%] h-[50px] rounded-lg px-4 pr-2 py-2 flex flex-row justify-between'>
