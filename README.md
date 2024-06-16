@@ -1,7 +1,7 @@
 ## A realtime chat app made with web sockets.
 ### Allowing to create New groups and add new people.
 ### Make people admin of groups.
-### Using azure blob storage for storing Profile Image.
+### Using cloudinary storage for storing Profile Image.
 ### Track last activity time of users.
 
 Chat Screen:
