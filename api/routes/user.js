@@ -1,9 +1,15 @@
 const router = require("express").Router();
-const {updateUser, searchUser} = require("../controllers/user")
-const {jwtAuthenticationMiddleware} = require("../utils/jwtVerify");
-const formidableMiddleware = require('express-formidable');
+const { updateUser, searchUser } = require("../controllers/user");
+const { jwtAuthenticationMiddleware } = require("../utils/jwtVerify");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/user/" });
 
-router.put('/update', jwtAuthenticationMiddleware, formidableMiddleware(), updateUser)
-router.get('/search', jwtAuthenticationMiddleware, searchUser)
+router.put(
+  "/update",
+  jwtAuthenticationMiddleware,
+  upload.single("photo"),
+  updateUser
+);
+router.get("/search", jwtAuthenticationMiddleware, searchUser);
 
-module.exports = router
+module.exports = router;
